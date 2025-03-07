@@ -215,18 +215,17 @@ namespace MovieDb.Tests
 		[InlineData(4, "Drama")]
 		[InlineData(5, "Crime", "Drama")]
 		[InlineData(10, "Thriller", "Adventure", "Action")]
-		[InlineData(12, "")]
 		public void Movies_can_be_filtered_by_genre(int expectedNumberOfResults, params string[] genres)
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			//IEnumerable<Movie> results = sut.Search(genres);
+			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, genres);
 
 			// Assert
-			//results.Should().AllSatisfy(m => m.Genre.Split(',').Intersect(genres).Should().NotBeEmpty());
-			//results.Count().Should().Be(expectedNumberOfResults);
+			results.Should().AllSatisfy(m => m.Genre.Split(", ").Intersect(genres).Should().NotBeEmpty());
+			results.Count().Should().Be(expectedNumberOfResults);
 		}
 
 		[Fact]

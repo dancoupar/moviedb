@@ -157,13 +157,18 @@ namespace MovieDb.Api.Controllers
 
 		[HttpGet]
         [Route("movies")]
-        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults, int pageNumber, int pageSize)
+        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults, int pageNumber, int pageSize, params string[] genres)
 		{
 			IQueryable<Movie> query = DummyData.AsQueryable();
 
 			if (!string.IsNullOrEmpty(titleContains))
 			{
 				query = query.Where(m => m.Title.ToLower().Contains(titleContains.ToLower()));
+			}
+
+			if (genres.Any())
+			{
+				query = query.Where(m => m.Genre.Split(", ", StringSplitOptions.RemoveEmptyEntries).Intersect(genres).Any());
 			}
 
 			return query
