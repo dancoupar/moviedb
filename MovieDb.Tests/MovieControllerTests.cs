@@ -1,8 +1,11 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MovieDb.Api.Controllers;
+using MovieDb.Api.DbContexts;
+using MovieDb.Api.Entities;
 using MovieDb.Api.Models;
 using System.Net;
 
@@ -10,9 +13,10 @@ namespace MovieDb.Tests
 {
 	public class MovieControllerTests
 	{
-		private static IEnumerable<MovieSearchResult> TestData => [
-			new MovieSearchResult()
+		private static IEnumerable<Movie> TestData => [
+			new Movie()
 			{
+				Id = 1,
 				ReleaseDate = new DateOnly(2022, 3, 1),
 				Title = "The Batman",
 				Overview = string.Empty,
@@ -23,8 +27,9 @@ namespace MovieDb.Tests
 				Genre = "Crime, Mystery, Thriller",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 2,
 				ReleaseDate = new DateOnly(1989, 6, 23),
 				Title = "Batman",
 				Overview = string.Empty,
@@ -35,8 +40,9 @@ namespace MovieDb.Tests
 				Genre = "Fantasy, Action",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/jUhGHv4YihieVjhU2TmFaBsZ4Xg.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 3,
 				ReleaseDate = new DateOnly(2005, 6, 10),
 				Title = "Batman Begins",
 				Overview = string.Empty,
@@ -47,8 +53,9 @@ namespace MovieDb.Tests
 				Genre = "Action, Crime, Drama",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/8RW2runSEc34IwKN2D1aPcJd2UL.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 4,
 				ReleaseDate = new DateOnly(2016, 3, 23),
 				Title = "Batman v Superman: Dawn of Justice",
 				Overview = string.Empty,
@@ -59,8 +66,9 @@ namespace MovieDb.Tests
 				Genre = "Action, Adventure, Fantasy",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/5UsK3grJvtQrtzEgqNlDljJW96w.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 5,
 				ReleaseDate = new DateOnly(1992, 6, 19),
 				Title = "Batman Returns",
 				Overview = string.Empty,
@@ -71,8 +79,9 @@ namespace MovieDb.Tests
 				Genre = "Action, Fantasy",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/mnihMYFydSUDm5LMnavkaaZqYKp.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 6,
 				ReleaseDate = new DateOnly(1997, 6, 20),
 				Title = "Batman & Robin",
 				Overview = string.Empty,
@@ -83,8 +92,9 @@ namespace MovieDb.Tests
 				Genre = "Science Fiction, Action, Fantasy",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/pc6Y42r8AGAT8iv7V24AkYdcbb8.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 7,
 				ReleaseDate = new DateOnly(1972, 3, 14),
 				Title = "The Godfather",
 				Overview = string.Empty,
@@ -95,8 +105,9 @@ namespace MovieDb.Tests
 				Genre = "Drama, Crime",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/eEslKSwcqmiNS6va24Pbxf2UKmJ.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 8,
 				ReleaseDate = new DateOnly(1974, 12, 20),
 				Title = "The Godfather: Part II",
 				Overview = string.Empty,
@@ -107,8 +118,9 @@ namespace MovieDb.Tests
 				Genre = "Drama, Crime",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 9,
 				ReleaseDate = new DateOnly(1990, 12, 25),
 				Title = "The Godfather: Part III",
 				Overview = string.Empty,
@@ -119,8 +131,9 @@ namespace MovieDb.Tests
 				Genre = "Crime, Drama, Thriller",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/lm3pQ2QoQ16pextRsmnUbG2onES.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 10,
 				ReleaseDate = new DateOnly(2021, 12, 22),
 				Title = "The King's Man",
 				Overview = string.Empty,
@@ -131,8 +144,9 @@ namespace MovieDb.Tests
 				Genre = "Action, Adventure, Thriller, War",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/aq4Pwv5Xeuvj6HZKtxyd23e6bE9.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 11,
 				ReleaseDate = new DateOnly(2005, 7, 13),
 				Title = "Charlie and the Chocolate Factory",
 				Overview = string.Empty,
@@ -143,8 +157,9 @@ namespace MovieDb.Tests
 				Genre = "Adventure, Comedy, Family, Fantasy",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/wfGfxtBkhBzQfOZw4S8IQZgrH0a.jpg")
 			},
-			new MovieSearchResult()
+			new Movie()
 			{
+				Id = 12,
 				ReleaseDate = new DateOnly(1993, 6, 11),
 				Title = "Jurassic Park",
 				Overview = string.Empty,
@@ -157,6 +172,15 @@ namespace MovieDb.Tests
 			}
 		];
 
+		private static MovieDbContext GetFakeDbContext()
+		{
+			var options = new DbContextOptionsBuilder<MovieDbContext>()
+				.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+				.Options;
+
+			return new MovieDbContext(options);
+		}
+
 		[Theory]
 		[InlineData("batman", 6)]
 		[InlineData("godfather", 3)]
@@ -165,8 +189,12 @@ namespace MovieDb.Tests
 		[InlineData("", 12)]
 		public async Task Movies_can_be_searched_by_title(string searchTerm, int expectedNumberOfResults)
 		{
-			// Arrange
-			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+			// Arrange			
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
@@ -191,7 +219,11 @@ namespace MovieDb.Tests
 		public async Task Search_results_can_be_limited_to_a_specified_number(int maxNumberOfResults)
 		{
 			// Arrange
-			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
@@ -217,7 +249,11 @@ namespace MovieDb.Tests
 		public async Task Search_results_can_be_paged(int pageNumber, int pageSize)
 		{
 			// Arrange
-			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
@@ -242,7 +278,11 @@ namespace MovieDb.Tests
 		public async Task Movies_can_be_filtered_by_genre(int expectedNumberOfResults, params string[] genres)
 		{
 			// Arrange
-			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
@@ -264,7 +304,11 @@ namespace MovieDb.Tests
 		public async Task Search_results_can_be_sorted_by_title()
 		{
 			// Arrange
-			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
@@ -278,25 +322,29 @@ namespace MovieDb.Tests
 			// Assert
 			IEnumerable<MovieSearchResult>? movies = result.Value;
 			movies.Should().NotBeNull();
-			movies.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(1));
-			movies.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(5));
-			movies.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(2));
-			movies.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(4));
-			movies.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(3));
-			movies.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(10));
-			movies.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(11));
-			movies.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(0));
-			movies.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(6));
-			movies.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(7));
-			movies.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(8));
-			movies.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(9));
+			movies.ElementAt(0).Id.Should().Be(2);
+			movies.ElementAt(1).Id.Should().Be(6);
+			movies.ElementAt(2).Id.Should().Be(3);
+			movies.ElementAt(3).Id.Should().Be(5);
+			movies.ElementAt(4).Id.Should().Be(4);
+			movies.ElementAt(5).Id.Should().Be(11);
+			movies.ElementAt(6).Id.Should().Be(12);
+			movies.ElementAt(7).Id.Should().Be(1);
+			movies.ElementAt(8).Id.Should().Be(7);
+			movies.ElementAt(9).Id.Should().Be(8);
+			movies.ElementAt(10).Id.Should().Be(9);
+			movies.ElementAt(11).Id.Should().Be(10);
 		}
 
 		[Fact]
 		public async Task Search_results_can_be_sorted_by_title_descending()
 		{
 			// Arrange
-			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
@@ -311,25 +359,29 @@ namespace MovieDb.Tests
 			// Assert
 			IEnumerable<MovieSearchResult>? movies = result.Value;
 			movies.Should().NotBeNull();
-			movies.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(1));
-			movies.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(5));
-			movies.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(2));
-			movies.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(4));
-			movies.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(3));
-			movies.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(10));
-			movies.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(11));
-			movies.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(0));
-			movies.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(6));
-			movies.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(7));
-			movies.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(8));
-			movies.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(9));
+			movies.ElementAt(11).Id.Should().Be(2);
+			movies.ElementAt(10).Id.Should().Be(6);
+			movies.ElementAt(9).Id.Should().Be(3);
+			movies.ElementAt(8).Id.Should().Be(5);
+			movies.ElementAt(7).Id.Should().Be(4);
+			movies.ElementAt(6).Id.Should().Be(11);
+			movies.ElementAt(5).Id.Should().Be(12);
+			movies.ElementAt(4).Id.Should().Be(1);
+			movies.ElementAt(3).Id.Should().Be(7);
+			movies.ElementAt(2).Id.Should().Be(8);
+			movies.ElementAt(1).Id.Should().Be(9);
+			movies.ElementAt(0).Id.Should().Be(10);
 		}
 
 		[Fact]
 		public async Task Search_results_can_be_sorted_by_release_date()
 		{
 			// Arrange
-			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
@@ -343,25 +395,29 @@ namespace MovieDb.Tests
 			// Assert
 			IEnumerable<MovieSearchResult>? movies = result.Value;
 			movies.Should().NotBeNull();
-			movies.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(6));
-			movies.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(7));
-			movies.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(1));
-			movies.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(8));
-			movies.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(4));
-			movies.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(11));
-			movies.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(5));
-			movies.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(2));
-			movies.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(10));
-			movies.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(3));
-			movies.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(9));
-			movies.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(0));
+			movies.ElementAt(0).Id.Should().Be(7);
+			movies.ElementAt(1).Id.Should().Be(8);
+			movies.ElementAt(2).Id.Should().Be(2);
+			movies.ElementAt(3).Id.Should().Be(9);
+			movies.ElementAt(4).Id.Should().Be(5);
+			movies.ElementAt(5).Id.Should().Be(12);
+			movies.ElementAt(6).Id.Should().Be(6);
+			movies.ElementAt(7).Id.Should().Be(3);
+			movies.ElementAt(8).Id.Should().Be(11);
+			movies.ElementAt(9).Id.Should().Be(4);
+			movies.ElementAt(10).Id.Should().Be(10);
+			movies.ElementAt(11).Id.Should().Be(1);
 		}
 
 		[Fact]
 		public async Task Search_results_can_be_sorted_by_release_date_descending()
 		{
 			// Arrange
-			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
@@ -375,26 +431,27 @@ namespace MovieDb.Tests
 
 			// Assert
 			IEnumerable<MovieSearchResult>? movies = result.Value;
-			movies.Should().NotBeNull();
-			movies.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(6));
-			movies.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(7));
-			movies.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(1));
-			movies.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(8));
-			movies.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(4));
-			movies.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(11));
-			movies.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(5));
-			movies.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(2));
-			movies.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(10));
-			movies.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(3));
-			movies.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(9));
-			movies.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(0));
+			movies.Should().NotBeNull();			
+			movies.ElementAt(11).Id.Should().Be(7);
+			movies.ElementAt(10).Id.Should().Be(8);
+			movies.ElementAt(9).Id.Should().Be(2);
+			movies.ElementAt(8).Id.Should().Be(9);
+			movies.ElementAt(7).Id.Should().Be(5);
+			movies.ElementAt(6).Id.Should().Be(12);
+			movies.ElementAt(5).Id.Should().Be(6);
+			movies.ElementAt(4).Id.Should().Be(3);
+			movies.ElementAt(3).Id.Should().Be(11);
+			movies.ElementAt(2).Id.Should().Be(4);
+			movies.ElementAt(1).Id.Should().Be(10);
+			movies.ElementAt(0).Id.Should().Be(1);
 		}
 
 		[Fact]
 		public async Task Specifying_an_invalid_sort_returns_400()
 		{
 			// Arrange
-			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+			using var fakeDbContext = GetFakeDbContext();
+			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()

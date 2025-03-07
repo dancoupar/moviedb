@@ -2,6 +2,8 @@ namespace MovieDb.Api.Models
 {
 	public class MovieSearchResult
 	{
+		public int Id { get; set; }
+
 		public required DateOnly ReleaseDate { get; init; }
 
 		public required string Title { get; init; }

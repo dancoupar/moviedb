@@ -68,6 +68,7 @@ namespace MovieDb.Api.Controllers
 		{
 			return new MovieSearchResult()
 			{
+				Id = entity.Id,
 				Title = entity.Title,
 				ReleaseDate = entity.ReleaseDate,
 				Overview = entity.Overview,
