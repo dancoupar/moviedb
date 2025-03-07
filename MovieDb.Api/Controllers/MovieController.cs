@@ -157,7 +157,7 @@ namespace MovieDb.Api.Controllers
 
 		[HttpGet]
         [Route("movies")]
-        public IEnumerable<Movie> Search(string titleContains)
+        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults)
 		{
 			IQueryable<Movie> query = DummyData.AsQueryable();
 
@@ -166,7 +166,9 @@ namespace MovieDb.Api.Controllers
 				query = query.Where(m => m.Title.ToLower().Contains(titleContains.ToLower()));
 			}
 
-			return query.ToList();
+			return query
+				.Take(maxNumberOfResults ?? 100)
+				.ToList();
         }
     }
 }

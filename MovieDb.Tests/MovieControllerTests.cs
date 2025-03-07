@@ -167,7 +167,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(searchTerm);
+			IEnumerable<Movie> results = sut.Search(searchTerm, null);
 
 			// Assert
 			results.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
@@ -176,16 +176,16 @@ namespace MovieDb.Tests
 
 		[Theory]
 		[InlineData(0)]
-		[InlineData(25)]
-		[InlineData(50)]
-		[InlineData(100)]
+		[InlineData(1)]
+		[InlineData(5)]
+		[InlineData(10)]
 		public void Search_results_can_be_limited_to_a_specified_number(int maxNumberOfResults)
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty);
+			IEnumerable<Movie> results = sut.Search(string.Empty, maxNumberOfResults);
 
 			// Assert
 			results.Count().Should().Be(maxNumberOfResults);
