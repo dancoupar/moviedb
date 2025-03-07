@@ -1,6 +1,6 @@
 namespace MovieDb.Api.Models
 {
-	public class Movie
+	public class MovieSearchResult
 	{
 		public required DateOnly ReleaseDate { get; init; }
 
