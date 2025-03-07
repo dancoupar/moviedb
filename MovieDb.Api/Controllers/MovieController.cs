@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieDb.Api.Models;
+using System.Linq.Expressions;
 
 namespace MovieDb.Api.Controllers
 {
@@ -173,7 +174,7 @@ namespace MovieDb.Api.Controllers
 
 			if (!string.IsNullOrEmpty(sortBy))
 			{
-				query = query.OrderBy(m => m.Title);
+				query = query.OrderBy(GetOrderByExpression(sortBy));
 			}
 
 			return query
@@ -182,5 +183,15 @@ namespace MovieDb.Api.Controllers
 				.Take(pageSize)
 				.ToList();
         }
+
+		private static Expression<Func<Movie, object>> GetOrderByExpression(string sortBy)
+		{
+			return sortBy switch
+			{
+				"Title" => m => m.Title,
+				"ReleaseDate" => m => m.ReleaseDate,
+				_ => throw new NotSupportedException()
+			};
+		}
     }
 }
