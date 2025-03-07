@@ -157,7 +157,7 @@ namespace MovieDb.Api.Controllers
 
 		[HttpGet]
         [Route("movies")]
-        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults)
+        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults, int pageNumber, int pageSize)
 		{
 			IQueryable<Movie> query = DummyData.AsQueryable();
 
@@ -168,6 +168,8 @@ namespace MovieDb.Api.Controllers
 
 			return query
 				.Take(maxNumberOfResults ?? 100)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize)
 				.ToList();
         }
     }

@@ -167,7 +167,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(searchTerm, null);
+			IEnumerable<Movie> results = sut.Search(searchTerm, null, 1, 100);
 
 			// Assert
 			results.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
@@ -185,28 +185,28 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, maxNumberOfResults);
+			IEnumerable<Movie> results = sut.Search(string.Empty, maxNumberOfResults, 1, 100);
 
 			// Assert
 			results.Count().Should().Be(maxNumberOfResults);
 		}
 
 		[Theory]
-		[InlineData(0, 10)]
 		[InlineData(1, 10)]
-		[InlineData(0, 5)]
+		[InlineData(2, 10)]
 		[InlineData(1, 5)]
 		[InlineData(2, 5)]
+		[InlineData(3, 5)]
 		public void Search_results_can_be_paged(int pageNumber, int pageSize)
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			//IEnumerable<Movie> results = sut.Search(string.Empty, pageNumber, pageSize);
+			IEnumerable<Movie> results = sut.Search(string.Empty, null, pageNumber, pageSize);
 
 			// Assert
-			//results.Should().BeEquivalentTo(TestData.Skip(pageNumber * pageSize).Take(pageSize));
+			results.Should().BeEquivalentTo(TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize));
 		}
 
 		[Theory]
