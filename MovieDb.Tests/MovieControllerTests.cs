@@ -167,7 +167,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(searchTerm, null, 1, 100, null);
+			IEnumerable<Movie> results = sut.Search(searchTerm, null, 1, 100, null, false);
 
 			// Assert
 			results.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
@@ -185,7 +185,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, maxNumberOfResults, 1, 100, null);
+			IEnumerable<Movie> results = sut.Search(string.Empty, maxNumberOfResults, 1, 100, null, false);
 
 			// Assert
 			results.Count().Should().Be(maxNumberOfResults);
@@ -203,7 +203,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, pageNumber, pageSize, null);
+			IEnumerable<Movie> results = sut.Search(string.Empty, null, pageNumber, pageSize, null, false);
 
 			// Assert
 			results.Should().BeEquivalentTo(TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize));
@@ -221,7 +221,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, null, genres);
+			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, null, false, genres);
 
 			// Assert
 			results.Should().AllSatisfy(m => m.Genre.Split(", ").Intersect(genres).Should().NotBeEmpty());
@@ -235,7 +235,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "Title");
+			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "Title", false);
 
 			// Assert
 			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(1));
@@ -253,13 +253,37 @@ namespace MovieDb.Tests
 		}
 
 		[Fact]
+		public void Search_results_can_be_sorted_by_title_descending()
+		{
+			// Arrange
+			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+
+			// Act
+			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "Title", true);
+
+			// Assert
+			results.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(1));
+			results.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(5));
+			results.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(2));
+			results.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(4));
+			results.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(3));
+			results.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(10));
+			results.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(11));
+			results.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(0));
+			results.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(6));
+			results.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(7));
+			results.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(8));
+			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(9));
+		}
+
+		[Fact]
 		public void Search_results_can_be_sorted_by_release_date()
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "ReleaseDate");
+			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "ReleaseDate", false);
 
 			// Assert
 			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(6));
@@ -274,6 +298,30 @@ namespace MovieDb.Tests
 			results.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(3));
 			results.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(9));
 			results.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(0));
+		}
+
+		[Fact]
+		public void Search_results_can_be_sorted_by_release_date_descending()
+		{
+			// Arrange
+			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+
+			// Act
+			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "ReleaseDate", true);
+
+			// Assert
+			results.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(6));
+			results.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(7));
+			results.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(1));
+			results.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(8));
+			results.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(4));
+			results.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(11));
+			results.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(5));
+			results.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(2));
+			results.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(10));
+			results.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(3));
+			results.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(9));
+			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(0));
 		}
 	}
 }

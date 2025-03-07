@@ -158,7 +158,7 @@ namespace MovieDb.Api.Controllers
 
 		[HttpGet]
         [Route("movies")]
-        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults, int pageNumber, int pageSize, string? sortBy, params string[] genres)
+        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults, int pageNumber, int pageSize, string? sortBy, bool sortDescending, params string[] genres)
 		{
 			IQueryable<Movie> query = DummyData.AsQueryable();
 
@@ -174,7 +174,7 @@ namespace MovieDb.Api.Controllers
 
 			if (!string.IsNullOrEmpty(sortBy))
 			{
-				query = query.OrderBy(GetOrderByExpression(sortBy));
+				query = sortDescending ? query.OrderByDescending(GetOrderByExpression(sortBy)) : query.OrderBy(GetOrderByExpression(sortBy));
 			}
 
 			return query
