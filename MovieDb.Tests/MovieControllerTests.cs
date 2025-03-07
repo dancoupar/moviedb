@@ -155,7 +155,7 @@ namespace MovieDb.Tests
 			}
 		];
 
-		[Theory]		
+		[Theory]
 		[InlineData("batman", 6)]
 		[InlineData("godfather", 3)]
 		[InlineData("the", 6)]
@@ -167,7 +167,12 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(searchTerm, null, 1, 100, null, false);
+			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			{
+				TitleContains = searchTerm,
+				PageNumber = 1,
+				PageSize = 100
+			});
 
 			// Assert
 			results.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
@@ -185,7 +190,13 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, maxNumberOfResults, 1, 100, null, false);
+			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				MaxNumberOfResults = maxNumberOfResults,				
+				PageNumber = 1,
+				PageSize = 100
+			});
 
 			// Assert
 			results.Count().Should().Be(maxNumberOfResults);
@@ -203,7 +214,12 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, pageNumber, pageSize, null, false);
+			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				PageNumber = pageNumber,
+				PageSize = pageSize
+			});
 
 			// Assert
 			results.Should().BeEquivalentTo(TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize));
@@ -221,7 +237,13 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, null, false, genres);
+			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				Genres = genres,
+				PageNumber = 1,
+				PageSize = 100
+			});
 
 			// Assert
 			results.Should().AllSatisfy(m => m.Genre.Split(", ").Intersect(genres).Should().NotBeEmpty());
@@ -235,7 +257,13 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "Title", false);
+			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				SortBy = "Title",
+				PageNumber = 1,
+				PageSize = 100
+			});
 
 			// Assert
 			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(1));
@@ -259,7 +287,14 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "Title", true);
+			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				SortBy = "Title",
+				SortDescending = true,
+				PageNumber = 1,
+				PageSize = 100
+			});
 
 			// Assert
 			results.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(1));
@@ -283,7 +318,13 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "ReleaseDate", false);
+			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				SortBy = "ReleaseDate",
+				PageNumber = 1,
+				PageSize = 100
+			});
 
 			// Assert
 			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(6));
@@ -307,7 +348,14 @@ namespace MovieDb.Tests
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(string.Empty, null, 1, 100, "ReleaseDate", true);
+			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				SortBy = "ReleaseDate",
+				SortDescending = true,
+				PageNumber = 1,
+				PageSize = 100
+			});
 
 			// Assert
 			results.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(6));

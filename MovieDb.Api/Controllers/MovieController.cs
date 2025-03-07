@@ -158,29 +158,31 @@ namespace MovieDb.Api.Controllers
 
 		[HttpGet]
         [Route("movies")]
-        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults, int pageNumber, int pageSize, string? sortBy, bool sortDescending, params string[] genres)
+        public IEnumerable<Movie> Search(SearchModel searchModel)
 		{
+			ArgumentNullException.ThrowIfNull(searchModel, nameof(searchModel));
+
 			IQueryable<Movie> query = DummyData.AsQueryable();
 
-			if (!string.IsNullOrEmpty(titleContains))
+			if (!string.IsNullOrEmpty(searchModel.TitleContains))
 			{
-				query = query.Where(m => m.Title.ToLower().Contains(titleContains.ToLower()));
+				query = query.Where(m => m.Title.ToLower().Contains(searchModel.TitleContains.ToLower()));
 			}
 
-			if (genres.Any())
+			if (searchModel.Genres?.Any() == true)
 			{
-				query = query.Where(m => m.Genre.Split(", ", StringSplitOptions.RemoveEmptyEntries).Intersect(genres).Any());
+				query = query.Where(m => m.Genre.Split(", ", StringSplitOptions.RemoveEmptyEntries).Intersect(searchModel.Genres).Any());
 			}
 
-			if (!string.IsNullOrEmpty(sortBy))
+			if (!string.IsNullOrEmpty(searchModel.SortBy))
 			{
-				query = sortDescending ? query.OrderByDescending(GetOrderByExpression(sortBy)) : query.OrderBy(GetOrderByExpression(sortBy));
+				query = searchModel.SortDescending ? query.OrderByDescending(GetOrderByExpression(searchModel.SortBy)) : query.OrderBy(GetOrderByExpression(searchModel.SortBy));
 			}
 
 			return query
-				.Take(maxNumberOfResults ?? 100)
-				.Skip((pageNumber - 1) * pageSize)
-				.Take(pageSize)
+				.Take(searchModel.MaxNumberOfResults ?? 100)
+				.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
+				.Take(searchModel.PageSize)
 				.ToList();
         }
 
