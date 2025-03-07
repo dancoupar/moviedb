@@ -157,7 +157,7 @@ namespace MovieDb.Api.Controllers
 
 		[HttpGet]
         [Route("movies")]
-        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults, int pageNumber, int pageSize, params string[] genres)
+        public IEnumerable<Movie> Search(string titleContains, int? maxNumberOfResults, int pageNumber, int pageSize, string? sortBy, params string[] genres)
 		{
 			IQueryable<Movie> query = DummyData.AsQueryable();
 
@@ -169,6 +169,11 @@ namespace MovieDb.Api.Controllers
 			if (genres.Any())
 			{
 				query = query.Where(m => m.Genre.Split(", ", StringSplitOptions.RemoveEmptyEntries).Intersect(genres).Any());
+			}
+
+			if (!string.IsNullOrEmpty(sortBy))
+			{
+				query = query.OrderBy(m => m.Title);
 			}
 
 			return query
