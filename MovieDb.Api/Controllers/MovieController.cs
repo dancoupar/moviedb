@@ -157,8 +157,8 @@ namespace MovieDb.Api.Controllers
 		];
 
 		[HttpGet]
-        [Route("movies")]
-        public IEnumerable<Movie> Search(SearchModel searchModel)
+		[Route("movies")]
+		public async Task<ActionResult<IEnumerable<Movie>>> Search([FromQuery] SearchModel searchModel)
 		{
 			ArgumentNullException.ThrowIfNull(searchModel, nameof(searchModel));
 
@@ -176,23 +176,34 @@ namespace MovieDb.Api.Controllers
 
 			if (!string.IsNullOrEmpty(searchModel.SortBy))
 			{
-				query = searchModel.SortDescending ? query.OrderByDescending(GetOrderByExpression(searchModel.SortBy)) : query.OrderBy(GetOrderByExpression(searchModel.SortBy));
+				Expression<Func<Movie, object>>? sortExpression = null;
+
+				try
+				{
+					sortExpression = GetSortByExpression(searchModel.SortBy);
+				}
+				catch (NotSupportedException e)
+				{
+					return this.BadRequest(e.Message);
+				}
+
+				query = searchModel.SortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
 			}
 
-			return query
+			return await Task.FromResult(query
 				.Take(searchModel.MaxNumberOfResults ?? 100)
 				.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
 				.Take(searchModel.PageSize)
-				.ToList();
+				.ToList());
         }
 
-		private static Expression<Func<Movie, object>> GetOrderByExpression(string sortBy)
+		private static Expression<Func<Movie, object>> GetSortByExpression(string sortBy)
 		{
 			return sortBy switch
 			{
 				"Title" => m => m.Title,
 				"ReleaseDate" => m => m.ReleaseDate,
-				_ => throw new NotSupportedException()
+				_ => throw new NotSupportedException($"Sorting by '{sortBy}' is not supported.")
 			};
 		}
     }

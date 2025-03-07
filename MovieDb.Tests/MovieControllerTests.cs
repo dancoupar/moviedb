@@ -1,8 +1,10 @@
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MovieDb.Api.Controllers;
 using MovieDb.Api.Models;
+using System.Net;
 
 namespace MovieDb.Tests
 {
@@ -161,13 +163,13 @@ namespace MovieDb.Tests
 		[InlineData("the", 6)]
 		[InlineData("foo", 0)]
 		[InlineData("", 12)]
-		public void Movies_can_be_searched_by_title(string searchTerm, int expectedNumberOfResults)
+		public async Task Movies_can_be_searched_by_title(string searchTerm, int expectedNumberOfResults)
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			ActionResult<IEnumerable<Movie>> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = searchTerm,
 				PageNumber = 1,
@@ -175,8 +177,10 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			results.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-			results.Count().Should().Be(expectedNumberOfResults);
+			IEnumerable<Movie>? movies = result.Value;
+			movies.Should().NotBeNull();
+			movies.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+			movies.Count().Should().Be(expectedNumberOfResults);
 		}
 
 		[Theory]
@@ -184,13 +188,13 @@ namespace MovieDb.Tests
 		[InlineData(1)]
 		[InlineData(5)]
 		[InlineData(10)]
-		public void Search_results_can_be_limited_to_a_specified_number(int maxNumberOfResults)
+		public async Task Search_results_can_be_limited_to_a_specified_number(int maxNumberOfResults)
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			ActionResult<IEnumerable<Movie>> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				MaxNumberOfResults = maxNumberOfResults,				
@@ -199,7 +203,9 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			results.Count().Should().Be(maxNumberOfResults);
+			IEnumerable<Movie>? movies = result.Value;
+			movies.Should().NotBeNull();
+			movies.Count().Should().Be(maxNumberOfResults);
 		}
 
 		[Theory]
@@ -208,13 +214,13 @@ namespace MovieDb.Tests
 		[InlineData(1, 5)]
 		[InlineData(2, 5)]
 		[InlineData(3, 5)]
-		public void Search_results_can_be_paged(int pageNumber, int pageSize)
+		public async Task Search_results_can_be_paged(int pageNumber, int pageSize)
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			ActionResult<IEnumerable<Movie>> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				PageNumber = pageNumber,
@@ -222,7 +228,9 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			results.Should().BeEquivalentTo(TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize));
+			IEnumerable<Movie>? movies = result.Value;
+			movies.Should().NotBeNull();
+			movies.Should().BeEquivalentTo(TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize));
 		}
 
 		[Theory]
@@ -231,13 +239,13 @@ namespace MovieDb.Tests
 		[InlineData(4, "Drama")]
 		[InlineData(5, "Crime", "Drama")]
 		[InlineData(10, "Thriller", "Adventure", "Action")]
-		public void Movies_can_be_filtered_by_genre(int expectedNumberOfResults, params string[] genres)
+		public async Task Movies_can_be_filtered_by_genre(int expectedNumberOfResults, params string[] genres)
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			ActionResult<IEnumerable<Movie>> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				Genres = genres,
@@ -246,18 +254,20 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			results.Should().AllSatisfy(m => m.Genre.Split(", ").Intersect(genres).Should().NotBeEmpty());
-			results.Count().Should().Be(expectedNumberOfResults);
+			IEnumerable<Movie>? movies = result.Value;
+			movies.Should().NotBeNull();
+			movies.Should().AllSatisfy(m => m.Genre.Split(", ").Intersect(genres).Should().NotBeEmpty());
+			movies.Count().Should().Be(expectedNumberOfResults);
 		}
 
 		[Fact]
-		public void Search_results_can_be_sorted_by_title()
+		public async Task Search_results_can_be_sorted_by_title()
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			ActionResult<IEnumerable<Movie>> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "Title",
@@ -266,28 +276,30 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(1));
-			results.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(5));
-			results.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(2));
-			results.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(4));
-			results.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(3));
-			results.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(10));
-			results.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(11));
-			results.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(0));
-			results.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(6));
-			results.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(7));
-			results.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(8));
-			results.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(9));
+			IEnumerable<Movie>? movies = result.Value;
+			movies.Should().NotBeNull();
+			movies.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(1));
+			movies.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(5));
+			movies.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(2));
+			movies.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(4));
+			movies.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(3));
+			movies.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(10));
+			movies.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(11));
+			movies.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(0));
+			movies.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(6));
+			movies.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(7));
+			movies.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(8));
+			movies.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(9));
 		}
 
 		[Fact]
-		public void Search_results_can_be_sorted_by_title_descending()
+		public async Task Search_results_can_be_sorted_by_title_descending()
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			ActionResult<IEnumerable<Movie>> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "Title",
@@ -297,28 +309,30 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			results.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(1));
-			results.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(5));
-			results.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(2));
-			results.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(4));
-			results.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(3));
-			results.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(10));
-			results.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(11));
-			results.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(0));
-			results.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(6));
-			results.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(7));
-			results.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(8));
-			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(9));
+			IEnumerable<Movie>? movies = result.Value;
+			movies.Should().NotBeNull();
+			movies.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(1));
+			movies.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(5));
+			movies.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(2));
+			movies.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(4));
+			movies.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(3));
+			movies.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(10));
+			movies.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(11));
+			movies.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(0));
+			movies.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(6));
+			movies.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(7));
+			movies.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(8));
+			movies.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(9));
 		}
 
 		[Fact]
-		public void Search_results_can_be_sorted_by_release_date()
+		public async Task Search_results_can_be_sorted_by_release_date()
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			ActionResult<IEnumerable<Movie>> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "ReleaseDate",
@@ -327,28 +341,30 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(6));
-			results.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(7));
-			results.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(1));
-			results.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(8));
-			results.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(4));
-			results.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(11));
-			results.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(5));
-			results.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(2));
-			results.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(10));
-			results.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(3));
-			results.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(9));
-			results.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(0));
+			IEnumerable<Movie>? movies = result.Value;
+			movies.Should().NotBeNull();
+			movies.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(6));
+			movies.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(7));
+			movies.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(1));
+			movies.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(8));
+			movies.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(4));
+			movies.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(11));
+			movies.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(5));
+			movies.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(2));
+			movies.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(10));
+			movies.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(3));
+			movies.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(9));
+			movies.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(0));
 		}
 
 		[Fact]
-		public void Search_results_can_be_sorted_by_release_date_descending()
+		public async Task Search_results_can_be_sorted_by_release_date_descending()
 		{
 			// Arrange
 			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			IEnumerable<Movie> results = sut.Search(new SearchModel()
+			ActionResult<IEnumerable<Movie>> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "ReleaseDate",
@@ -358,18 +374,40 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			results.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(6));
-			results.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(7));
-			results.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(1));
-			results.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(8));
-			results.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(4));
-			results.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(11));
-			results.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(5));
-			results.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(2));
-			results.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(10));
-			results.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(3));
-			results.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(9));
-			results.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(0));
+			IEnumerable<Movie>? movies = result.Value;
+			movies.Should().NotBeNull();
+			movies.ElementAt(11).Should().BeEquivalentTo(TestData.ElementAt(6));
+			movies.ElementAt(10).Should().BeEquivalentTo(TestData.ElementAt(7));
+			movies.ElementAt(9).Should().BeEquivalentTo(TestData.ElementAt(1));
+			movies.ElementAt(8).Should().BeEquivalentTo(TestData.ElementAt(8));
+			movies.ElementAt(7).Should().BeEquivalentTo(TestData.ElementAt(4));
+			movies.ElementAt(6).Should().BeEquivalentTo(TestData.ElementAt(11));
+			movies.ElementAt(5).Should().BeEquivalentTo(TestData.ElementAt(5));
+			movies.ElementAt(4).Should().BeEquivalentTo(TestData.ElementAt(2));
+			movies.ElementAt(3).Should().BeEquivalentTo(TestData.ElementAt(10));
+			movies.ElementAt(2).Should().BeEquivalentTo(TestData.ElementAt(3));
+			movies.ElementAt(1).Should().BeEquivalentTo(TestData.ElementAt(9));
+			movies.ElementAt(0).Should().BeEquivalentTo(TestData.ElementAt(0));
+		}
+
+		[Fact]
+		public async Task Specifying_an_invalid_sort_returns_400()
+		{
+			// Arrange
+			var sut = new MovieController(new Mock<ILogger<MovieController>>().Object);
+
+			// Act
+			ActionResult<IEnumerable<Movie>> result = await sut.Search(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				SortBy = "SomeInvalidValue",
+				SortDescending = true,
+				PageNumber = 1,
+				PageSize = 100
+			});
+
+			// Assert			
+			result.Result.Should().BeOfType<BadRequestObjectResult>().Which.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
 		}
 	}
 }
