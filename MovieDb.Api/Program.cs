@@ -10,6 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MovieDbContext>();
 builder.Services.AddMemoryCache();
+builder.Services.AddProblemDetails();
+builder.Services.AddLogging((config) => config.AddConsole());
 
 var app = builder.Build();
 
@@ -19,6 +21,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Add ProblemDetails middleware to the application pipeline
+app.UseExceptionHandler("/error");
 
 app.UseHttpsRedirection();
 

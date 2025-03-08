@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -30,7 +31,7 @@ namespace MovieDb.Api.Controllers
 				entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
 				return this.SearchDb(searchModel);
 			}) ?? [];
-			
+
 			return new SearchResults()
 			{
 				PageNumber = searchModel.PageNumber,
@@ -42,6 +43,22 @@ namespace MovieDb.Api.Controllers
 					.Select(m => ConvertToSearchResult(m))
 			};
         }
+
+		[Route("/error")]
+		[ApiExplorerSettings(IgnoreApi = true)]
+		public IActionResult HandleError()
+		{
+			var exceptionHandlerFeature = this.HttpContext.Features.Get<IExceptionHandlerFeature>();
+			
+			if (exceptionHandlerFeature?.Error is not null)
+			{
+				string message = exceptionHandlerFeature.Error.Message!;
+				_logger.LogError(exceptionHandlerFeature.Error, message);
+				return this.Problem(detail: message);
+			}
+
+			return this.Problem();
+		}
 
 		private async Task<List<Movie>> SearchDb(SearchModel searchModel)
 		{
