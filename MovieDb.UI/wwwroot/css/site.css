@@ -20,3 +20,14 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.column {
+    float: left;
+    width: 20%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}

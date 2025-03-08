@@ -10,15 +10,34 @@
 </div>
 <div>
     <fieldset>
-        <legend>Search</legend>
+        <legend>Search</legend>        
         <div>
-            <label for="titleSearchInput">Title contains:</label><br>
+            
         </div>
-        <div>
-            <input id="titleSearchInput" type="text" maxlength="100">
+        <div class="row">
+            <div class="column">
+				<label for="titleSearchInput">Title contains:</label>
+            </div>
+            <div class="column">
+                <label for="maxResultsSelect">Limit results to:</label>                
+            </div>
         </div>
-        <div>
-            <input id="searchButton" type="button" value="Search">
+        <div class="row">
+            <div class="column">
+                <input id="titleSearchInput" type="text" maxlength="100">
+            </div>
+            <div class="column">
+                <select id="maxResultsSelect">
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <input id="searchButton" type="button" value="Search">
+            </div>
         </div>
     </fieldset>
 </div>
@@ -27,6 +46,7 @@
         <tr>
             <th>Title</th>
             <th>Release Date</th>
+            <th>Genre</th>
         </tr>
     </thead>
     <tbody id="searchResults">

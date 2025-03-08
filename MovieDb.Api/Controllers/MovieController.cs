@@ -72,22 +72,19 @@ namespace MovieDb.Api.Controllers
 				query = query.Where(m => m.Genres.Select(g => g.Genre).Intersect(searchModel.Genres).Any());
 			}
 
-			if (searchModel.SortBy is not null)
-			{
-				Expression<Func<Movie, object>>? sortExpression = sortExpression = GetSortByExpression(searchModel.SortBy);
-				query = searchModel.SortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
-			}
-
+			Expression<Func<Movie, object>>? sortExpression = sortExpression = GetSortByExpression(searchModel.SortBy);
+			query = searchModel.SortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
+			
 			return await query.Take(searchModel.MaxNumberOfResults ?? 100).ToListAsync();
 		}
 
-		private static Expression<Func<Movie, object>> GetSortByExpression(string sortBy)
+		private static Expression<Func<Movie, object>> GetSortByExpression(string? sortBy)
 		{
 			return sortBy switch
 			{
 				"Title" => m => m.Title,
 				"ReleaseDate" => m => m.ReleaseDate,
-				_ => throw new NotSupportedException($"Sorting by '{sortBy}' is not supported.")
+				_ => m => m.Title
 			};
 		}
 
@@ -114,6 +111,7 @@ namespace MovieDb.Api.Controllers
 			{  
 				searchModel.TitleContains,
 				searchModel.Genres,
+				searchModel.MaxNumberOfResults,
 				searchModel.SortBy,
 				searchModel.SortDescending
 			});			
