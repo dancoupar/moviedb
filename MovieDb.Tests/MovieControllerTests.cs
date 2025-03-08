@@ -8,7 +8,6 @@ using MovieDb.Api.Controllers;
 using MovieDb.Api.DbContexts;
 using MovieDb.Api.Entities;
 using MovieDb.Api.Models;
-using System.Net;
 
 namespace MovieDb.Tests
 {
@@ -202,7 +201,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
 			{
 				TitleContains = searchTerm,
 				PageNumber = 1,
@@ -231,7 +230,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				MaxNumberOfResults = maxNumberOfResults,				
@@ -261,7 +260,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				PageNumber = pageNumber,
@@ -294,7 +293,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				Genres = genres,
@@ -320,7 +319,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "Title",
@@ -356,7 +355,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "Title",
@@ -393,7 +392,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "ReleaseDate",
@@ -429,7 +428,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "ReleaseDate",
@@ -453,6 +452,36 @@ namespace MovieDb.Tests
 			movies.ElementAt(2).Id.Should().Be(4);
 			movies.ElementAt(1).Id.Should().Be(10);
 			movies.ElementAt(0).Id.Should().Be(1);
+		}
+
+		[Fact]
+		public async Task A_distinct_list_of_genres_can_be_retrieved_alphabetically()
+		{
+			// Arrange
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
+
+			// Act
+			ActionResult<IEnumerable<string>> result = await sut.GetDistinctGenres();
+
+			// Assert
+			IEnumerable<string>? genres = result.Value;
+			genres.Should().NotBeNull();
+			genres.Count().Should().Be(11);
+			genres.ElementAt(0).Should().Be("Action");			
+			genres.ElementAt(1).Should().Be("Adventure");
+			genres.ElementAt(2).Should().Be("Comedy");
+			genres.ElementAt(3).Should().Be("Crime");
+			genres.ElementAt(4).Should().Be("Drama");
+			genres.ElementAt(5).Should().Be("Family");
+			genres.ElementAt(6).Should().Be("Fantasy");
+			genres.ElementAt(7).Should().Be("Mystery");
+			genres.ElementAt(8).Should().Be("Science Fiction");
+			genres.ElementAt(9).Should().Be("Thriller");
+			genres.ElementAt(10).Should().Be("War");
 		}
 	}
 }

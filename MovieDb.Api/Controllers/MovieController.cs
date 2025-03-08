@@ -18,7 +18,7 @@ namespace MovieDb.Api.Controllers
 
 		[HttpGet]
 		[Route("movies")]
-		public async Task<ActionResult<SearchResults>> Search([FromQuery] SearchModel searchModel)
+		public async Task<ActionResult<SearchResults>> SearchMovies([FromQuery] SearchModel searchModel)
 		{
 			ArgumentNullException.ThrowIfNull(searchModel, nameof(searchModel));
 
@@ -48,6 +48,13 @@ namespace MovieDb.Api.Controllers
 					.Select(m => ConvertToSearchResult(m))
 			};
         }
+
+		[HttpGet]
+		[Route("genres")]
+		public async Task<ActionResult<IEnumerable<string>>> GetDistinctGenres()
+		{
+			return await Enumerable.Empty<string>().AsQueryable().ToListAsync();
+		}
 
 		[Route("/error")]
 		[ApiExplorerSettings(IgnoreApi = true)]
@@ -89,7 +96,7 @@ namespace MovieDb.Api.Controllers
 			{
 				"Title" => m => m.Title,
 				"ReleaseDate" => m => m.ReleaseDate,
-				_ => m => m.Title
+				_ => throw new NotSupportedException($"Sorting by '{sortBy}' is not supported.")
 			};
 		}
 
