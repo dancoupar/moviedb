@@ -64,6 +64,42 @@ namespace MovieDb.Api.Migrations
 
                     b.ToTable("Movies");
                 });
+
+            modelBuilder.Entity("MovieDb.Api.Entities.MovieGenre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Genre")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieGenre");
+                });
+
+            modelBuilder.Entity("MovieDb.Api.Entities.MovieGenre", b =>
+                {
+                    b.HasOne("MovieDb.Api.Entities.Movie", "Movie")
+                        .WithMany("Genres")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("MovieDb.Api.Entities.Movie", b =>
+                {
+                    b.Navigation("Genres");
+                });
 #pragma warning restore 612, 618
         }
     }

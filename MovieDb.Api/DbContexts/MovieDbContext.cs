@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MovieDb.Api.Entities;
 using System.Globalization;
+using System.Reflection.Metadata;
 
 namespace MovieDb.Api.DbContexts
 {
@@ -39,6 +40,12 @@ namespace MovieDb.Api.DbContexts
 			modelBuilder.Entity<Movie>()
 				.Property(e => e.Title)
 				.UseCollation("NOCASE");
+
+			modelBuilder.Entity<Movie>()
+				.HasMany(e => e.Genres)
+				.WithOne(e => e.Movie)
+				.HasForeignKey(e => e.MovieId)
+				.HasPrincipalKey(e => e.Id);
 		}
 	}
 }

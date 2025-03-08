@@ -25,7 +25,8 @@ namespace MovieDb.Tests
 				VoteAverage = 8.1m,
 				OriginalLanguage = "en",
 				Genre = "Crime, Mystery, Thriller",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg"),
+				Genres = [new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Mystery" }, new MovieGenre() { Genre = "Thriller" }]
 			},
 			new Movie()
 			{
@@ -38,7 +39,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7.2m,
 				OriginalLanguage = "en",
 				Genre = "Fantasy, Action",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/jUhGHv4YihieVjhU2TmFaBsZ4Xg.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/jUhGHv4YihieVjhU2TmFaBsZ4Xg.jpg"),
+				Genres = [new MovieGenre() { Genre = "Fantasy" }, new MovieGenre() { Genre = "Action" }]
 			},
 			new Movie()
 			{
@@ -51,7 +53,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7.7m,
 				OriginalLanguage = "en",
 				Genre = "Action, Crime, Drama",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/8RW2runSEc34IwKN2D1aPcJd2UL.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/8RW2runSEc34IwKN2D1aPcJd2UL.jpg"),
+				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Drama" }]
 			},
 			new Movie()
 			{
@@ -64,7 +67,8 @@ namespace MovieDb.Tests
 				VoteAverage = 5.9m,
 				OriginalLanguage = "en",
 				Genre = "Action, Adventure, Fantasy",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/5UsK3grJvtQrtzEgqNlDljJW96w.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/5UsK3grJvtQrtzEgqNlDljJW96w.jpg"),
+				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Fantasy" }]
 			},
 			new Movie()
 			{
@@ -77,7 +81,8 @@ namespace MovieDb.Tests
 				VoteAverage = 6.9m,
 				OriginalLanguage = "en",
 				Genre = "Action, Fantasy",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/mnihMYFydSUDm5LMnavkaaZqYKp.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/mnihMYFydSUDm5LMnavkaaZqYKp.jpg"),
+				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Fantasy" }]
 			},
 			new Movie()
 			{
@@ -90,7 +95,8 @@ namespace MovieDb.Tests
 				VoteAverage = 4.3m,
 				OriginalLanguage = "en",
 				Genre = "Science Fiction, Action, Fantasy",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/pc6Y42r8AGAT8iv7V24AkYdcbb8.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/pc6Y42r8AGAT8iv7V24AkYdcbb8.jpg"),
+				Genres = [new MovieGenre() { Genre = "Science Fiction" }, new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Fantasy" }]
 			},
 			new Movie()
 			{
@@ -103,7 +109,8 @@ namespace MovieDb.Tests
 				VoteAverage = 8.7m,
 				OriginalLanguage = "en",
 				Genre = "Drama, Crime",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/eEslKSwcqmiNS6va24Pbxf2UKmJ.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/eEslKSwcqmiNS6va24Pbxf2UKmJ.jpg"),
+				Genres = [new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Crime" }]
 			},
 			new Movie()
 			{
@@ -116,7 +123,8 @@ namespace MovieDb.Tests
 				VoteAverage = 8.6m,
 				OriginalLanguage = "en",
 				Genre = "Drama, Crime",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg"),
+				Genres = [new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Crime" }]
 			},
 			new Movie()
 			{
@@ -129,7 +137,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7.4m,
 				OriginalLanguage = "en",
 				Genre = "Crime, Drama, Thriller",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/lm3pQ2QoQ16pextRsmnUbG2onES.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/lm3pQ2QoQ16pextRsmnUbG2onES.jpg"),
+				Genres = [new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Thriller" }]
 			},
 			new Movie()
 			{
@@ -142,7 +151,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7,
 				OriginalLanguage = "en",
 				Genre = "Action, Adventure, Thriller, War",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/aq4Pwv5Xeuvj6HZKtxyd23e6bE9.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/aq4Pwv5Xeuvj6HZKtxyd23e6bE9.jpg"),
+				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Thriller" }, new MovieGenre() { Genre = "War" }]
 			},
 			new Movie()
 			{
@@ -155,7 +165,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7,
 				OriginalLanguage = "en",
 				Genre = "Adventure, Comedy, Family, Fantasy",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/wfGfxtBkhBzQfOZw4S8IQZgrH0a.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/wfGfxtBkhBzQfOZw4S8IQZgrH0a.jpg"),
+				Genres = [new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Comedy" }, new MovieGenre() { Genre = "Family" }, new MovieGenre() { Genre = "Fantasy" }]
 			},
 			new Movie()
 			{
@@ -168,17 +179,22 @@ namespace MovieDb.Tests
 				VoteAverage = 7.9m,
 				OriginalLanguage = "en",
 				Genre = "Adventure, Science Fiction",
-				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg")
+				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg"),
+				Genres = [new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Science Fiction" }]
 			}
 		];
 
 		private static MovieDbContext GetFakeDbContext()
 		{
 			var options = new DbContextOptionsBuilder<MovieDbContext>()
-				.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+				.UseSqlite("Filename=:memory:")
 				.Options;
 
-			return new MovieDbContext(options);
+			var dbContext = new MovieDbContext(options);
+			dbContext.Database.OpenConnection();
+			dbContext.Database.EnsureCreated();
+
+			return dbContext;
 		}
 
 		[Theory]
@@ -266,7 +282,7 @@ namespace MovieDb.Tests
 			// Assert
 			IEnumerable<MovieSearchResult>? movies = result.Value;
 			movies.Should().NotBeNull();
-			movies.Should().BeEquivalentTo(TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize));
+			movies.Select(m => m.Id).Should().BeEquivalentTo(TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(m => m.Id));
 		}
 
 		[Theory]
