@@ -33,5 +33,12 @@ namespace MovieDb.Api.DbContexts
 				);
 			}
 		}
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Movie>()
+				.Property(e => e.Title)
+				.UseCollation("NOCASE");
+		}
 	}
 }

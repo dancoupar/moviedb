@@ -47,7 +47,8 @@ namespace MovieDb.Api.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
 
                     b.Property<decimal>("VoteAverage")
                         .HasColumnType("TEXT");

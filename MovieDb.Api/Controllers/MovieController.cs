@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MovieDb.Api.DbContexts;
 using MovieDb.Api.Entities;
 using MovieDb.Api.Models;
@@ -22,7 +23,7 @@ namespace MovieDb.Api.Controllers
 
 			if (!string.IsNullOrEmpty(searchModel.TitleContains))
 			{
-				query = query.Where(m => m.Title.ToLower().Contains(searchModel.TitleContains.ToLower()));
+				query = query.Where(m => EF.Functions.Like(m.Title, $"%{searchModel.TitleContains}%"));
 			}
 
 			if (searchModel.Genres?.Any() == true)
@@ -46,12 +47,12 @@ namespace MovieDb.Api.Controllers
 				query = searchModel.SortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
 			}
 
-			return await Task.FromResult(query
+			return await query
 				.Take(searchModel.MaxNumberOfResults ?? 100)
 				.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
 				.Take(searchModel.PageSize)
 				.Select(m => ConvertToSearchResult(m))
-				.ToList());
+				.ToListAsync();
         }
 
 		private static Expression<Func<Movie, object>> GetSortByExpression(string sortBy)
