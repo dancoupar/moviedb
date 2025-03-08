@@ -14,7 +14,7 @@ namespace MovieDb.Api.DbContexts
 			Map(m => m.VoteCount).Name("Vote_Count");
 			Map(m => m.VoteAverage).Name("Vote_Average");
 			Map(m => m.OriginalLanguage).Name("Original_Language");
-			Map(m => m.Genre).Name("Genre");
+			//Map(m => m.Genre).Name("Genre");
 			Map(m => m.PosterUrl).Name("Poster_Url");
 		}
 	}

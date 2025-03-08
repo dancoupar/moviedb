@@ -23,10 +23,6 @@ namespace MovieDb.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Genre")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("OriginalLanguage")
                         .IsRequired()
                         .HasColumnType("TEXT");
