@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="~/js/site.js"></script>
+
+<div class="text-center">
+    <h1 class="display-4">Movie Database</h1>
+    <p>Search for movies using the search function below.</p>
+</div>
+<div>
+    <fieldset>
+        <legend>Search</legend>
+        <div>
+            <label for="titleSearchInput">Title contains:</label><br>
+        </div>
+        <div>
+            <input id="titleSearchInput" type="text" maxlength="100">
+        </div>
+        <div>
+            <input id="searchButton" type="button" value="Search">
+        </div>
+    </fieldset>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Release Date</th>
+        </tr>
+    </thead>
+    <tbody id="searchResults">
+        
+    </tbody>
+</table>
