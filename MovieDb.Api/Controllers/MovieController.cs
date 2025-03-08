@@ -15,7 +15,7 @@ namespace MovieDb.Api.Controllers
 
 		[HttpGet]
 		[Route("movies")]
-		public async Task<ActionResult<IEnumerable<MovieSearchResult>>> Search([FromQuery] SearchModel searchModel)
+		public async Task<ActionResult<SearchResults>> Search([FromQuery] SearchModel searchModel)
 		{
 			ArgumentNullException.ThrowIfNull(searchModel, nameof(searchModel));
 
@@ -47,12 +47,18 @@ namespace MovieDb.Api.Controllers
 				query = searchModel.SortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
 			}
 
-			return await query
-				.Take(searchModel.MaxNumberOfResults ?? 100)
-				.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
-				.Take(searchModel.PageSize)
-				.Select(m => ConvertToSearchResult(m))
-				.ToListAsync();
+			List<Movie> searchResults = await query.Take(searchModel.MaxNumberOfResults ?? 100).ToListAsync();
+
+			return new SearchResults()
+			{
+				PageNumber = searchModel.PageNumber,
+				PageSize = searchModel.PageSize,
+				TotalElements = searchResults.Count,
+				Content = searchResults
+					.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
+					.Take(searchModel.PageSize)
+					.Select(m => ConvertToSearchResult(m))
+			};
         }
 
 		private static Expression<Func<Movie, object>> GetSortByExpression(string sortBy)

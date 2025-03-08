@@ -201,7 +201,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = searchTerm,
 				PageNumber = 1,
@@ -209,7 +209,7 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			IEnumerable<MovieSearchResult>? movies = result.Value;
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
 			movies.Should().NotBeNull();
 			movies.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 			movies.Count().Should().Be(expectedNumberOfResults);
@@ -230,7 +230,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				MaxNumberOfResults = maxNumberOfResults,				
@@ -239,7 +239,7 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			IEnumerable<MovieSearchResult>? movies = result.Value;
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
 			movies.Should().NotBeNull();
 			movies.Count().Should().Be(maxNumberOfResults);
 		}
@@ -260,7 +260,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				PageNumber = pageNumber,
@@ -268,7 +268,7 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			IEnumerable<MovieSearchResult>? movies = result.Value;
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
 			movies.Should().NotBeNull();
 			movies.Select(m => m.Id).Should().BeEquivalentTo(TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(m => m.Id));
 		}
@@ -289,7 +289,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				Genres = genres,
@@ -298,7 +298,7 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			IEnumerable<MovieSearchResult>? movies = result.Value;
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
 			movies.Should().NotBeNull();
 			movies.Should().AllSatisfy(m => m.Genre.Split(", ").Intersect(genres).Should().NotBeEmpty());
 			movies.Count().Should().Be(expectedNumberOfResults);
@@ -315,7 +315,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "Title",
@@ -324,7 +324,7 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			IEnumerable<MovieSearchResult>? movies = result.Value;
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
 			movies.Should().NotBeNull();
 			movies.ElementAt(0).Id.Should().Be(2);
 			movies.ElementAt(1).Id.Should().Be(6);
@@ -351,7 +351,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "Title",
@@ -361,7 +361,7 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			IEnumerable<MovieSearchResult>? movies = result.Value;
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
 			movies.Should().NotBeNull();
 			movies.ElementAt(11).Id.Should().Be(2);
 			movies.ElementAt(10).Id.Should().Be(6);
@@ -388,7 +388,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "ReleaseDate",
@@ -397,7 +397,7 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			IEnumerable<MovieSearchResult>? movies = result.Value;
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
 			movies.Should().NotBeNull();
 			movies.ElementAt(0).Id.Should().Be(7);
 			movies.ElementAt(1).Id.Should().Be(8);
@@ -424,7 +424,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "ReleaseDate",
@@ -434,7 +434,7 @@ namespace MovieDb.Tests
 			});
 
 			// Assert
-			IEnumerable<MovieSearchResult>? movies = result.Value;
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
 			movies.Should().NotBeNull();			
 			movies.ElementAt(11).Id.Should().Be(7);
 			movies.ElementAt(10).Id.Should().Be(8);
@@ -458,7 +458,7 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<MovieSearchResult>> result = await sut.Search(new SearchModel()
+			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "SomeInvalidValue",
