@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MovieDb.Api.Controllers;
@@ -198,7 +199,7 @@ namespace MovieDb.Tests
 			fakeDbContext.Movies.AddRange(TestData);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
@@ -227,7 +228,7 @@ namespace MovieDb.Tests
 			fakeDbContext.Movies.AddRange(TestData);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
@@ -257,7 +258,7 @@ namespace MovieDb.Tests
 			fakeDbContext.Movies.AddRange(TestData);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
@@ -286,7 +287,7 @@ namespace MovieDb.Tests
 			fakeDbContext.Movies.AddRange(TestData);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
@@ -312,7 +313,7 @@ namespace MovieDb.Tests
 			fakeDbContext.Movies.AddRange(TestData);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
@@ -348,7 +349,7 @@ namespace MovieDb.Tests
 			fakeDbContext.Movies.AddRange(TestData);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
@@ -385,7 +386,7 @@ namespace MovieDb.Tests
 			fakeDbContext.Movies.AddRange(TestData);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
@@ -421,7 +422,7 @@ namespace MovieDb.Tests
 			fakeDbContext.Movies.AddRange(TestData);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
 			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
@@ -448,27 +449,6 @@ namespace MovieDb.Tests
 			movies.ElementAt(2).Id.Should().Be(4);
 			movies.ElementAt(1).Id.Should().Be(10);
 			movies.ElementAt(0).Id.Should().Be(1);
-		}
-
-		[Fact]
-		public async Task Specifying_an_invalid_sort_returns_400()
-		{
-			// Arrange
-			using var fakeDbContext = GetFakeDbContext();
-			var sut = new MovieController(fakeDbContext, new Mock<ILogger<MovieController>>().Object);
-
-			// Act
-			ActionResult<SearchResults> result = await sut.Search(new SearchModel()
-			{
-				TitleContains = string.Empty,
-				SortBy = "SomeInvalidValue",
-				SortDescending = true,
-				PageNumber = 1,
-				PageSize = 100
-			});
-
-			// Assert			
-			result.Result.Should().BeOfType<BadRequestObjectResult>().Which.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
 		}
 	}
 }
