@@ -9,6 +9,8 @@ namespace MovieDb.Api.DbContexts
 	{
 		public DbSet<Movie> Movies { get; set; }
 
+		public DbSet<MovieGenre> MovieGenre { get; set; }
+
 		protected override void OnConfiguring(DbContextOptionsBuilder options)
 		{
 			if (options.IsConfigured)

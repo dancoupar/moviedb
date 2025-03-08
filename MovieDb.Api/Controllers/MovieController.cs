@@ -53,7 +53,16 @@ namespace MovieDb.Api.Controllers
 		[Route("genres")]
 		public async Task<ActionResult<IEnumerable<string>>> GetDistinctGenres()
 		{
-			return await Enumerable.Empty<string>().AsQueryable().ToListAsync();
+			return await _cache.GetOrCreateAsync("genres", entry =>
+			{
+				entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+				return _dbContext.MovieGenre
+					.AsQueryable()
+					.Select(g => g.Genre)
+					.Distinct()
+					.Order()
+					.ToListAsync();
+			}) ?? [];
 		}
 
 		[Route("/error")]
