@@ -7,7 +7,7 @@ var currentPage;
 var currentSort;
 var sortDescending;
 
-window.onload = function () {
+window.onload = function () {    
     document.getElementById("searchButton").onclick = function () {
         currentPage = 1;
         currentSort = "Title";
@@ -25,12 +25,20 @@ window.onload = function () {
             document.getElementById("searchButton").click();
         }
     });
+    fetchGenres();
 }
 
 function performSearch() {
     const titleContains = document.getElementById("titleSearchInput").value;
     const maxResults = document.getElementById("maxResultsSelect").value;
-    fetch(`https://localhost:7177/movies?titleContains=${titleContains}&maxNumberOfResults=${maxResults}&pageSize=20&pageNumber=${currentPage}&sortBy=${currentSort}&sortDescending=${sortDescending}`)
+    let searchUrl = `https://localhost:7177/movies?titleContains=${titleContains}&maxNumberOfResults=${maxResults}&pageSize=20&pageNumber=${currentPage}&sortBy=${currentSort}&sortDescending=${sortDescending}`;    
+    const genreBoxes = document.getElementById("genres").getElementsByTagName("input");
+    for (let i = 0; i < genreBoxes.length; i++) {
+        if (genreBoxes[i].checked) {
+            searchUrl += `&genres=${genreBoxes[i].value}`;
+        }
+    }    
+    fetch(searchUrl)
         .then(response => response.json())
         .then(data => renderSearchResults(data))
         .catch(error => console.error('Error during search: ', error));
@@ -82,9 +90,37 @@ function renderPagingLinks(data) {
 
     for (let i = 1; i < numberOfPages + 1; i++) {
         let pageLink = document.createElement("a");
-        pageLink.textContent = i.toString();
+        pageLink.textContent = i;
         pageLink.href = "#";
         pageLink.onclick = function () { currentPage = i; performSearch(); };
-        pagingLinks.append(pageLink);
+        pagingLinks.appendChild(pageLink);
+    }
+}
+
+function fetchGenres() {
+    fetch("https://localhost:7177/genres")
+        .then(response => response.json())
+        .then(data => populateGenres(data))
+        .catch(error => console.error('Error fetching genres: ', error));
+}
+
+function populateGenres(data) {
+    const genres = document.getElementById("genres");
+
+    for (let i = 0; i < data.length; i++) {
+        let checkBox = document.createElement("input");
+        checkBox.setAttribute("id", data[i]);
+        checkBox.setAttribute("type", "checkbox");
+        checkBox.setAttribute("value", data[i]);
+        genres.appendChild(checkBox);
+
+        let label = document.createElement("label");
+        label.setAttribute("for", data[i]);
+        label.textContent = data[i];
+        genres.appendChild(label);
+
+        if (i === Math.round(data.length / 2)) {
+            genres.appendChild(document.createElement("br"));
+        }
     }
 }

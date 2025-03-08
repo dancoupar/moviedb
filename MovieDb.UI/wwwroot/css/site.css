@@ -35,3 +35,11 @@ body {
 #pagingLinks a {
     margin-right: 10px;
 }
+
+#genres label {
+    margin-right: 5px;
+}
+
+#genres input[type="checkbox"] {
+    margin-right: 3px;
+}
