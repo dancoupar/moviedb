@@ -19,7 +19,7 @@ namespace MovieDb.Api.Controllers
 		{
 			ArgumentNullException.ThrowIfNull(searchModel, nameof(searchModel));
 
-			IQueryable<Movie> query = _dbContext.Movies.AsQueryable();			
+			IQueryable<Movie> query = _dbContext.Movies.AsQueryable().Include(m => m.Genres);			
 
 			if (!string.IsNullOrEmpty(searchModel.TitleContains))
 			{
@@ -28,7 +28,7 @@ namespace MovieDb.Api.Controllers
 
 			if (searchModel.Genres?.Any() == true)
 			{
-				query = query.Include(m => m.Genres).Where(m => m.Genres.Select(g => g.Genre).Intersect(searchModel.Genres).Any());
+				query = query.Where(m => m.Genres.Select(g => g.Genre).Intersect(searchModel.Genres).Any());
 			}
 
 			if (!string.IsNullOrEmpty(searchModel.SortBy))
