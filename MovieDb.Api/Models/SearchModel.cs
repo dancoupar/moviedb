@@ -16,7 +16,7 @@ namespace MovieDb.Api.Models
 		[Range(1, 100)]
 		public int PageSize { get; set; }
 
-		[AllowedValues(null, "Title", "Release Date")]
+		[AllowedValues(null, "Title", "ReleaseDate")]
 		public string? SortBy { get; set; }
 
 		public bool SortDescending { get; set; }

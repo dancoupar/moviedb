@@ -3,22 +3,53 @@
 
 // Write your JavaScript code.
 
+var currentPage;
+var currentSort;
+var sortDescending;
+
 window.onload = function () {
     document.getElementById("searchButton").onclick = function () {
-        performSearch(1);
-	};
+        currentPage = 1;
+        currentSort = "Title";
+        sortDescending = false;
+        performSearch();
+    };
+    document.getElementById("titleSortLink").onclick = function () {
+        applySort("Title");
+    };
+    document.getElementById("releaseDateSortLink").onclick = function () {
+        applySort("ReleaseDate");
+    };
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            document.getElementById("searchButton").click();
+        }
+    });
 }
 
-function performSearch(pageNumber) {
+function performSearch() {
     const titleContains = document.getElementById("titleSearchInput").value;
     const maxResults = document.getElementById("maxResultsSelect").value;
-    fetch(`https://localhost:7177/movies?titleContains=${titleContains}&maxNumberOfResults=${maxResults}&pageSize=20&pageNumber=${pageNumber}`)
+    fetch(`https://localhost:7177/movies?titleContains=${titleContains}&maxNumberOfResults=${maxResults}&pageSize=20&pageNumber=${currentPage}&sortBy=${currentSort}&sortDescending=${sortDescending}`)
         .then(response => response.json())
         .then(data => renderSearchResults(data))
         .catch(error => console.error('Error during search: ', error));
 }
 
+function applySort(sortBy) {
+    if (currentSort !== sortBy) {
+        currentSort = sortBy;
+        sortDescending = false;
+    }
+    else {
+        sortDescending = !sortDescending;
+    }
+    performSearch();
+}
+
 function renderSearchResults(data) {
+    currentPage = data.pageNumber;
+
     const tableBody = document.getElementById("searchResults");
     tableBody.innerHTML = "";
 
@@ -53,7 +84,7 @@ function renderPagingLinks(data) {
         let pageLink = document.createElement("a");
         pageLink.textContent = i.toString();
         pageLink.href = "#";
-        pageLink.onclick = function () { performSearch(i); };
+        pageLink.onclick = function () { currentPage = i; performSearch(); };
         pagingLinks.append(pageLink);
     }
 }

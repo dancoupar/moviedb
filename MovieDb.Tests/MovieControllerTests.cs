@@ -271,6 +271,10 @@ namespace MovieDb.Tests
 			// Assert
 			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
 			movies.Should().NotBeNull();
+
+			var first = movies.Select(m => m.Id).ToList();
+			var second = TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(m => m.Id).ToList();
+
 			movies.Select(m => m.Id).Should().BeEquivalentTo(TestData.Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(m => m.Id));
 		}
 
