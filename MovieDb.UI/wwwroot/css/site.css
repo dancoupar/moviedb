@@ -31,3 +31,7 @@ body {
     display: table;
     clear: both;
 }
+
+#pagingLinks a {
+    margin-right: 10px;
+}
