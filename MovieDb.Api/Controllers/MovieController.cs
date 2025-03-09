@@ -68,6 +68,11 @@ namespace MovieDb.Api.Controllers
 			};
         }
 
+		/// <summary>
+		/// Gets a distinct list of all movie genres.
+		/// </summary>
+		/// <returns>A distinct list of all genres.</returns>
+		/// <response code="200">If genres are returned successfully.</response>
 		[HttpGet]
 		[Route("genres")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
