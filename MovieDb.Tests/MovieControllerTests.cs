@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -198,8 +199,9 @@ namespace MovieDb.Tests
 		}
 
 		[Theory]
-		[InlineData("batman", 6)]
-		[InlineData("godfather", 3)]
+		[InlineData("Batman", 6)]
+		[InlineData("Godfather", 3)]
+		[InlineData("father", 3)]
 		[InlineData("the", 6)]
 		[InlineData("foo", 0)]
 		[InlineData("", 12)]
@@ -227,11 +229,34 @@ namespace MovieDb.Tests
 			movies.Count().Should().Be(expectedNumberOfResults);
 		}
 
+		[Fact]
+		public async Task Searching_by_title_is_not_case_sensitive()
+		{
+			// Arrange			
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
+
+			// Act
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
+			{
+				TitleContains = "godfather",
+				PageNumber = 1,
+				PageSize = 100
+			});
+
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
+			movies.Should().NotBeNull();
+			movies.Count().Should().Be(3);
+		}
+
 		[Theory]
-		[InlineData("marlon", 1)]
-		[InlineData("pacino", 3)]
+		[InlineData("Marlon", 1)]
+		[InlineData("Pacino", 3)]
 		[InlineData("Laura Dern", 1)]
-		[InlineData("michael keaton", 2)]
+		[InlineData("Michael Keaton", 2)]
 		[InlineData("", 12)]
 		public async Task Movies_can_be_searched_by_actor(string searchTerm, int expectedNumberOfResults)
 		{
@@ -256,6 +281,30 @@ namespace MovieDb.Tests
 			movies.Should().NotBeNull();
 			movies.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 			movies.Count().Should().Be(expectedNumberOfResults);
+		}
+
+		[Fact]
+		public async Task Searching_by_actor_is_not_case_sensitive()
+		{
+			// Arrange			
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
+
+			// Act
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				ActorContains = "marlon",
+				PageNumber = 1,
+				PageSize = 100
+			});
+
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
+			movies.Should().NotBeNull();
+			movies.Count().Should().Be(1);
 		}
 
 		[Theory]
@@ -349,6 +398,30 @@ namespace MovieDb.Tests
 			movies.Should().NotBeNull();
 			movies.Should().AllSatisfy(m => m.Genre.Split(", ").Intersect(genres).Should().NotBeEmpty());
 			movies.Count().Should().Be(expectedNumberOfResults);
+		}
+
+		[Fact]
+		public void Searching_by_an_invalid_genre_throws_bad_request()
+		{
+			// Arrange
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
+
+			// Act
+			Func<Task> act = async () => {
+				await sut.SearchMovies(new SearchModel()
+				{
+					TitleContains = string.Empty,
+					Genres = ["InvalidGenre"],
+					PageNumber = 1,
+					PageSize = 100
+				});
+			};
+
+			act.Should().ThrowAsync<BadHttpRequestException>();
 		}
 
 		[Fact]
