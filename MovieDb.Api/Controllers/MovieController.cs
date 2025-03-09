@@ -128,7 +128,10 @@ namespace MovieDb.Api.Controllers
 			// Initial sort to ensure deterministic results when search is capped
 			query = query.OrderBy(m => m.Id);
 			
-			return await query.Take(searchModel.MaxNumberOfResults ?? 100).ToListAsync();
+			return await query
+				.Take(searchModel.MaxNumberOfResults ?? 100)
+				.AsSingleQuery()
+				.ToListAsync();
 		}
 
 		private static Func<Movie, object> GetSortByExpression(string? sortBy)
@@ -179,6 +182,7 @@ namespace MovieDb.Api.Controllers
 					.Select(g => g.Genre)
 					.Distinct()
 					.Order()
+					.AsSingleQuery()
 					.ToListAsync();
 			}) ?? [];
 		}
