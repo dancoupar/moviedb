@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace MovieDb.Api.Entities
 {
+	[Index(nameof(ActorName))]
 	public class MovieActor
 	{
 		[Key]

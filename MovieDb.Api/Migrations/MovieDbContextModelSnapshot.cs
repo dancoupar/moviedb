@@ -77,6 +77,8 @@ namespace MovieDb.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ActorName");
+
                     b.HasIndex("MovieId");
 
                     b.ToTable("MovieActor");
@@ -96,6 +98,8 @@ namespace MovieDb.Api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Genre");
 
                     b.HasIndex("MovieId");
 

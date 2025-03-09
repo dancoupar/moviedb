@@ -10,7 +10,7 @@ var sortDescending;
 window.onload = function () {    
     document.getElementById("searchButton").onclick = function () {
         currentPage = 1;
-        currentSort = "Title";
+        currentSort = "";
         sortDescending = false;
         performSearch();
     };
@@ -47,17 +47,16 @@ function performSearch() {
         }
     }
     fetch(searchUrl)        
-        .then(response => {
-            return response.json().then(data => {
-                if (response.ok) {
-                    renderSearchResults(data);
-                }
-                else {
-                    handleError(data);
-                }
-            });
+        .then(async response => {
+            const data = await response.json();
+            if (response.ok) {
+                renderSearchResults(data);
+            }
+            else {
+                handleError(data);
+            }
         })
-        .catch(error => { console.log("Error: " + error); });
+        .catch(error => console.log("Error: " + error));
 }
 
 function applySort(sortBy) {
@@ -139,17 +138,16 @@ function renderPagingLinks(data) {
 
 function fetchGenres() {
     fetch(`${ window.appSettings.apiUrl }/genres`)
-        .then(response => {
-            return response.json().then(data => {
-                if (response.ok) {
-                    populateGenres(data);
-                }
-                else {
-                    handleError(data);
-                }
-            });
+        .then(async response => {
+            const data = await response.json();
+            if (response.ok) {
+                populateGenres(data);
+            }
+            else {
+                handleError(data);
+            }
         })
-        .catch(error => { console.log("Error: " + error); });
+        .catch(error => console.log("Error: " + error));
 }
 
 function populateGenres(data) {        
