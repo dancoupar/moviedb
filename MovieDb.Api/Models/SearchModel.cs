@@ -7,6 +7,9 @@ namespace MovieDb.Api.Models
 		[MaxLength(100)]
 		public required string TitleContains { get; set; }
 
+		[MaxLength(100)]
+		public string? ActorContains { get; set; }
+
 		[Range(1, 100)]
 		public int? MaxNumberOfResults { get; set; }
 

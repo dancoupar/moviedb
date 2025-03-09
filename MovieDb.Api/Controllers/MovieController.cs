@@ -88,6 +88,13 @@ namespace MovieDb.Api.Controllers
 				.Include(m => m.Genres)
 				.Where(m => EF.Functions.Like(m.Title, $"%{searchModel.TitleContains}%"));
 			
+			if (!string.IsNullOrEmpty(searchModel.ActorContains))
+			{
+				query = query
+					.Include(m => m.Actors)
+					.Where(m => m.Actors.Any(a => EF.Functions.Like(a.ActorName, $"%{searchModel.ActorContains}%")));
+			}
+
 			if (searchModel.Genres?.Any() == true)
 			{
 				query = query.Where(m => m.Genres.Select(g => g.Genre).Intersect(searchModel.Genres).Any());
@@ -131,6 +138,7 @@ namespace MovieDb.Api.Controllers
 			return JsonSerializer.Serialize(new
 			{  
 				searchModel.TitleContains,
+				searchModel.ActorContains,
 				searchModel.Genres,
 				searchModel.MaxNumberOfResults
 			});			

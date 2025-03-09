@@ -26,7 +26,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg"),
 				Genres = [new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Mystery" }, new MovieGenre() { Genre = "Thriller" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Robert Pattinson" }, new MovieActor() { ActorName = "Zoë Kravitz" }]
 			},
 			new Movie()
 			{
@@ -40,7 +40,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/jUhGHv4YihieVjhU2TmFaBsZ4Xg.jpg"),
 				Genres = [new MovieGenre() { Genre = "Fantasy" }, new MovieGenre() { Genre = "Action" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Michael Keaton" }, new MovieActor() { ActorName = "Jack Nicholson" }]
 			},
 			new Movie()
 			{
@@ -54,7 +54,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/8RW2runSEc34IwKN2D1aPcJd2UL.jpg"),
 				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Drama" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Christian Bale" }, new MovieActor() { ActorName = "Katie Holmes" }, new MovieActor() { ActorName = "Liam Neeson" }]
 			},
 			new Movie()
 			{
@@ -68,7 +68,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/5UsK3grJvtQrtzEgqNlDljJW96w.jpg"),
 				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Fantasy" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Ben Affleck" }, new MovieActor() { ActorName = "Henry Cavill" }, new MovieActor() { ActorName = "Amy Adams" }]
 			},
 			new Movie()
 			{
@@ -82,7 +82,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/mnihMYFydSUDm5LMnavkaaZqYKp.jpg"),
 				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Fantasy" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Michael Keaton" }, new MovieActor() { ActorName = "Danny DeVito" }]
 			},
 			new Movie()
 			{
@@ -96,7 +96,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/pc6Y42r8AGAT8iv7V24AkYdcbb8.jpg"),
 				Genres = [new MovieGenre() { Genre = "Science Fiction" }, new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Fantasy" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "George Cloone" }, new MovieActor() { ActorName = "Chris O'Donnel" },  new MovieActor() { ActorName = "Alicia Silverstone" }]
 			},
 			new Movie()
 			{
@@ -110,7 +110,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/eEslKSwcqmiNS6va24Pbxf2UKmJ.jpg"),
 				Genres = [new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Crime" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Marlon Brando" }, new MovieActor() { ActorName = "Al Pacino" }]
 			},
 			new Movie()
 			{
@@ -124,7 +124,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg"),
 				Genres = [new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Crime" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Al Pacino" }, new MovieActor() { ActorName = "Robert De Niro" }]
 			},
 			new Movie()
 			{
@@ -138,7 +138,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/lm3pQ2QoQ16pextRsmnUbG2onES.jpg"),
 				Genres = [new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Thriller" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Al Pacino" }, new MovieActor() { ActorName = "Sofia Coppola" }, new MovieActor() { ActorName = "Andy Garcia" }]
 			},
 			new Movie()
 			{
@@ -152,7 +152,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/aq4Pwv5Xeuvj6HZKtxyd23e6bE9.jpg"),
 				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Thriller" }, new MovieGenre() { Genre = "War" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Ralph Fiennes" }, new MovieActor() { ActorName = "Gemma Arterton" }, new MovieActor() { ActorName = "Rhys Ifans" }]
 			},
 			new Movie()
 			{
@@ -166,7 +166,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/wfGfxtBkhBzQfOZw4S8IQZgrH0a.jpg"),
 				Genres = [new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Comedy" }, new MovieGenre() { Genre = "Family" }, new MovieGenre() { Genre = "Fantasy" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Johnny Depp" }, new MovieActor() { ActorName = "Freddie Highmore" }]
 			},
 			new Movie()
 			{
@@ -180,7 +180,7 @@ namespace MovieDb.Tests
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg"),
 				Genres = [new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Science Fiction" }],
-				Actors = []
+				Actors = [new MovieActor() { ActorName = "Sam Neill" }, new MovieActor() { ActorName = "Laura Dern" }, new MovieActor() { ActorName = "Jeff Goldblum" }]
 			}
 		];
 
@@ -216,6 +216,37 @@ namespace MovieDb.Tests
 			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
 			{
 				TitleContains = searchTerm,
+				PageNumber = 1,
+				PageSize = 100
+			});
+
+			// Assert
+			IEnumerable<MovieSearchResult>? movies = result.Value?.Content;
+			movies.Should().NotBeNull();
+			movies.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+			movies.Count().Should().Be(expectedNumberOfResults);
+		}
+
+		[Theory]
+		[InlineData("marlon", 1)]
+		[InlineData("pacino", 3)]
+		[InlineData("Laura Dern", 1)]
+		[InlineData("michael keaton", 2)]
+		[InlineData("", 12)]
+		public async Task Movies_can_be_searched_by_actor(string searchTerm, int expectedNumberOfResults)
+		{
+			// Arrange			
+			using var fakeDbContext = GetFakeDbContext();
+			fakeDbContext.Movies.AddRange(TestData);
+			fakeDbContext.SaveChanges();
+
+			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
+
+			// Act
+			ActionResult<SearchResults> result = await sut.SearchMovies(new SearchModel()
+			{
+				TitleContains = string.Empty,
+				ActorContains = searchTerm,
 				PageNumber = 1,
 				PageSize = 100
 			});

@@ -11,6 +11,8 @@ namespace MovieDb.Api.DbContexts
 
 		public DbSet<MovieGenre> MovieGenre { get; set; }
 
+		public DbSet<MovieActor> MovieActor { get; set; }
+
 		protected override void OnConfiguring(DbContextOptionsBuilder options)
 		{
 			if (options.IsConfigured)
