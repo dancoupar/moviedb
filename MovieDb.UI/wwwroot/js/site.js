@@ -31,7 +31,7 @@ window.onload = function () {
 function performSearch() {
     const titleContains = document.getElementById("titleSearchInput").value;
     const maxResults = document.getElementById("maxResultsSelect").value;
-    let searchUrl = `http://localhost:5001/movies?titleContains=${titleContains}&maxNumberOfResults=${maxResults}&pageSize=20&pageNumber=${currentPage}&sortBy=${currentSort}&sortDescending=${sortDescending}`;    
+    let searchUrl = `${window.appSettings.apiUrl}/movies?titleContains=${titleContains}&maxNumberOfResults=${maxResults}&pageSize=20&pageNumber=${currentPage}&sortBy=${currentSort}&sortDescending=${sortDescending}`;    
     const genreBoxes = document.getElementById("genres").getElementsByTagName("input");
     for (let i = 0; i < genreBoxes.length; i++) {
         if (genreBoxes[i].checked) {
@@ -98,7 +98,7 @@ function renderPagingLinks(data) {
 }
 
 function fetchGenres() {
-    fetch("http://localhost:5001/genres")
+    fetch(`${window.appSettings.apiUrl}/genres`)
         .then(response => response.json())
         .then(data => populateGenres(data))
         .catch(error => console.error('Error fetching genres: ', error));

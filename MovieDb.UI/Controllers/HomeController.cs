@@ -1,20 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using MovieDb.UI.Models;
 using System.Diagnostics;
 
 namespace MovieDb.UI.Controllers
 {
-	public class HomeController : Controller
+	public class HomeController(IOptions<ApiSettings> apiSettings) : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
-
-		public HomeController(ILogger<HomeController> logger)
-		{
-			_logger = logger;
-		}
+		private readonly ApiSettings _apiSettings = apiSettings.Value;
 
 		public IActionResult Index()
 		{
+			ViewData["ApiUrl"] = _apiSettings.ApiUrl;
 			return View();
 		}
 

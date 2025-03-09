@@ -2,9 +2,9 @@ using MovieDb.Api.DbContexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Add services to the container
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -12,6 +12,8 @@ builder.Services.AddDbContext<MovieDbContext>();
 builder.Services.AddMemoryCache();
 builder.Services.AddProblemDetails();
 builder.Services.AddLogging((builder) => builder.AddConsole());
+
+// Add CORS policies for running in VS and Docker
 builder.Services.AddCors((builder) =>
 {
     builder.AddPolicy(name: "AllowLocalhostDev", policy =>
@@ -32,7 +34,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-	app.UseCors("AllowLocalhost");
+	app.UseCors("AllowLocalhostDev");
 }
 else
 {

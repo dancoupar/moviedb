@@ -1,7 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
+<script>
+    window.appSettings = {
+        apiUrl: '@ViewData["ApiUrl"]'
+    };
+</script>
 <script src="~/js/site.js"></script>
 
 <div class="text-center">
@@ -10,7 +14,7 @@
 </div>
 <div>
     <fieldset>
-        <legend>Search</legend>        
+        <legend>Search</legend>
         <div>
             
         </div>
