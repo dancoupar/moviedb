@@ -61,6 +61,27 @@ namespace MovieDb.Api.Migrations
                     b.ToTable("Movies");
                 });
 
+            modelBuilder.Entity("MovieDb.Api.Entities.MovieActor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ActorName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieActor");
+                });
+
             modelBuilder.Entity("MovieDb.Api.Entities.MovieGenre", b =>
                 {
                     b.Property<int>("Id")
@@ -81,6 +102,17 @@ namespace MovieDb.Api.Migrations
                     b.ToTable("MovieGenre");
                 });
 
+            modelBuilder.Entity("MovieDb.Api.Entities.MovieActor", b =>
+                {
+                    b.HasOne("MovieDb.Api.Entities.Movie", "Movie")
+                        .WithMany("Actors")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("MovieDb.Api.Entities.MovieGenre", b =>
                 {
                     b.HasOne("MovieDb.Api.Entities.Movie", "Movie")
@@ -94,6 +126,8 @@ namespace MovieDb.Api.Migrations
 
             modelBuilder.Entity("MovieDb.Api.Entities.Movie", b =>
                 {
+                    b.Navigation("Actors");
+
                     b.Navigation("Genres");
                 });
 #pragma warning restore 612, 618

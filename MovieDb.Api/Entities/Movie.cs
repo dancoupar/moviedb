@@ -28,6 +28,8 @@ namespace MovieDb.Api.Entities
 
 		public required Uri PosterUrl { get; set; }
 
-		public virtual required ICollection<MovieGenre> Genres { get; set; }
+		public required ICollection<MovieGenre> Genres { get; set; }
+
+		public required ICollection<MovieActor> Actors { get; set; }
 	}
 }

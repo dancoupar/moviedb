@@ -25,7 +25,8 @@ namespace MovieDb.Tests
 				VoteAverage = 8.1m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg"),
-				Genres = [new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Mystery" }, new MovieGenre() { Genre = "Thriller" }]
+				Genres = [new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Mystery" }, new MovieGenre() { Genre = "Thriller" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -38,7 +39,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7.2m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/jUhGHv4YihieVjhU2TmFaBsZ4Xg.jpg"),
-				Genres = [new MovieGenre() { Genre = "Fantasy" }, new MovieGenre() { Genre = "Action" }]
+				Genres = [new MovieGenre() { Genre = "Fantasy" }, new MovieGenre() { Genre = "Action" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -51,7 +53,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7.7m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/8RW2runSEc34IwKN2D1aPcJd2UL.jpg"),
-				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Drama" }]
+				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Drama" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -64,7 +67,8 @@ namespace MovieDb.Tests
 				VoteAverage = 5.9m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/5UsK3grJvtQrtzEgqNlDljJW96w.jpg"),
-				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Fantasy" }]
+				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Fantasy" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -77,7 +81,8 @@ namespace MovieDb.Tests
 				VoteAverage = 6.9m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/mnihMYFydSUDm5LMnavkaaZqYKp.jpg"),
-				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Fantasy" }]
+				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Fantasy" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -90,7 +95,8 @@ namespace MovieDb.Tests
 				VoteAverage = 4.3m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/pc6Y42r8AGAT8iv7V24AkYdcbb8.jpg"),
-				Genres = [new MovieGenre() { Genre = "Science Fiction" }, new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Fantasy" }]
+				Genres = [new MovieGenre() { Genre = "Science Fiction" }, new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Fantasy" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -103,7 +109,8 @@ namespace MovieDb.Tests
 				VoteAverage = 8.7m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/eEslKSwcqmiNS6va24Pbxf2UKmJ.jpg"),
-				Genres = [new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Crime" }]
+				Genres = [new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Crime" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -116,7 +123,8 @@ namespace MovieDb.Tests
 				VoteAverage = 8.6m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg"),
-				Genres = [new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Crime" }]
+				Genres = [new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Crime" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -129,7 +137,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7.4m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/lm3pQ2QoQ16pextRsmnUbG2onES.jpg"),
-				Genres = [new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Thriller" }]
+				Genres = [new MovieGenre() { Genre = "Crime" }, new MovieGenre() { Genre = "Drama" }, new MovieGenre() { Genre = "Thriller" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -142,7 +151,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/aq4Pwv5Xeuvj6HZKtxyd23e6bE9.jpg"),
-				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Thriller" }, new MovieGenre() { Genre = "War" }]
+				Genres = [new MovieGenre() { Genre = "Action" }, new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Thriller" }, new MovieGenre() { Genre = "War" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -155,7 +165,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/wfGfxtBkhBzQfOZw4S8IQZgrH0a.jpg"),
-				Genres = [new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Comedy" }, new MovieGenre() { Genre = "Family" }, new MovieGenre() { Genre = "Fantasy" }]
+				Genres = [new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Comedy" }, new MovieGenre() { Genre = "Family" }, new MovieGenre() { Genre = "Fantasy" }],
+				Actors = []
 			},
 			new Movie()
 			{
@@ -168,7 +179,8 @@ namespace MovieDb.Tests
 				VoteAverage = 7.9m,
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg"),
-				Genres = [new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Science Fiction" }]
+				Genres = [new MovieGenre() { Genre = "Adventure" }, new MovieGenre() { Genre = "Science Fiction" }],
+				Actors = []
 			}
 		];
 

@@ -41,7 +41,11 @@ namespace MovieDb.Api.DbContexts
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Movie>()
-				.Property(e => e.Title)
+				.Property(m => m.Title)
+				.UseCollation("NOCASE");
+
+			modelBuilder.Entity<MovieActor>()
+				.Property(a => a.ActorName)
 				.UseCollation("NOCASE");
 
 			modelBuilder.Entity<Movie>()
@@ -49,6 +53,12 @@ namespace MovieDb.Api.DbContexts
 				.WithOne(e => e.Movie)
 				.HasForeignKey(e => e.MovieId)
 				.HasPrincipalKey(e => e.Id);
+
+			modelBuilder.Entity<Movie>()
+				.HasMany(e => e.Actors)
+				.WithOne(e => e.Movie)
+				.HasForeignKey(e => e.MovieId)
+				.HasPrincipalKey(e => e.Id);			
 		}
 	}
 }
