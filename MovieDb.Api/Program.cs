@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using MovieDb.Api.DbContexts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,9 +14,14 @@ builder.Services.AddProblemDetails();
 builder.Services.AddLogging((builder) => builder.AddConsole());
 builder.Services.AddCors((builder) =>
 {
-    builder.AddPolicy(name: "AllowLocalhost", policy =>
+    builder.AddPolicy(name: "AllowLocalhostDev", policy =>
 	{
 		policy.WithOrigins("https://localhost:7151").AllowAnyMethod().AllowAnyHeader();
+	});
+
+	builder.AddPolicy(name: "AllowLocalhostDocker", policy =>
+	{
+		policy.WithOrigins("http://localhost:5002").AllowAnyMethod().AllowAnyHeader();
 	});
 });
 
@@ -28,6 +32,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+	app.UseCors("AllowLocalhost");
+}
+else
+{
+	app.UseCors("AllowLocalhostDocker");
 }
 
 // Add ProblemDetails middleware to the application pipeline
@@ -38,7 +47,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseCors("AllowLocalhost");
 
 app.Run();
