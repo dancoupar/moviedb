@@ -52,11 +52,13 @@
         <div class="row">
             <div class="column">
                 <button id="searchButton" type="button">Search</button>
-            </div>
+            </div>            
+        </div>
+        <div id="errors">
         </div>
     </fieldset>
 </div>
-<table>
+<table id="searchTable" hidden>
     <thead>
         <tr>
             <th><a id="titleSortLink" href="#">Title</a></th>
@@ -64,8 +66,6 @@
             <th>Genre</th>
         </tr>
     </thead>
-    <tbody id="searchResults">
-        
-    </tbody>
+    <tbody id="searchResults"></tbody>
 </table>
 <div id="pagingLinks"></div>

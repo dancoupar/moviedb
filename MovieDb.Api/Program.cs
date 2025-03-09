@@ -18,7 +18,7 @@ builder.Services.AddCors((builder) =>
 {
     builder.AddPolicy(name: "AllowLocalhostDev", policy =>
 	{
-		policy.WithOrigins("https://localhost:7151").AllowAnyMethod().AllowAnyHeader();
+		policy.WithOrigins("http://localhost:5192").AllowAnyMethod().AllowAnyHeader();
 	});
 
 	builder.AddPolicy(name: "AllowLocalhostDocker", policy =>

@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "DefaultProfile",
+    "Projects": [
+      {
+        "Path": "MovieDb.Api\\MovieDb.Api.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      },
+      {
+        "Path": "MovieDb.UI\\MovieDb.UI.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      }
+    ]
+  }
+]
