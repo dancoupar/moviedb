@@ -508,10 +508,10 @@ namespace MovieDb.Tests
 			var sut = new MovieController(fakeDbContext, new MemoryCache(new MemoryCacheOptions()), new Mock<ILogger<MovieController>>().Object);
 
 			// Act
-			ActionResult<IEnumerable<string>> result = await sut.GetDistinctGenres();
+			ActionResult<IEnumerable<string>> result = await sut.GetAllGenres();
 
 			// Assert
-			IEnumerable<string>? genres = result.Value;
+			var genres = ((OkObjectResult?)result?.Result)?.Value as IEnumerable<string>;
 			genres.Should().NotBeNull();
 			genres.Count().Should().Be(11);
 			genres.ElementAt(0).Should().Be("Action");			

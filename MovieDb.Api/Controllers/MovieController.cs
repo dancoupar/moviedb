@@ -10,17 +10,36 @@ using System.Text.Json;
 namespace MovieDb.Api.Controllers
 {
 	[ApiController]
-    public class MovieController(MovieDbContext dbContext, IMemoryCache cache, ILogger<MovieController> logger) : ControllerBase
+	[Produces("application/json")]
+	public class MovieController(MovieDbContext dbContext, IMemoryCache cache, ILogger<MovieController> logger) : ControllerBase
     {
 		private readonly MovieDbContext _dbContext = dbContext;
 		private readonly IMemoryCache _cache = cache;
 		private readonly ILogger<MovieController> _logger = logger;
 
+		/// <summary>
+		/// Searches for movies based on specified search criteria.
+		/// </summary>
+		/// <returns>Search results, including pagination info.</returns>
+		/// <response code="200">If search results are returned successfully.</response>
+		/// <response code="400">If one or more search criteria are missing or invalid.</response>
 		[HttpGet]
 		[Route("movies")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<SearchResults>> SearchMovies([FromQuery] SearchModel searchModel)
 		{
 			ArgumentNullException.ThrowIfNull(searchModel, nameof(searchModel));
+
+			if (searchModel.Genres is not null)
+			{
+				IEnumerable<string> validGenres = await this.GetDistinctGenres();
+				
+				if (searchModel.Genres.Except(validGenres).Any())
+				{
+					throw new BadHttpRequestException("One or more genres were not valid.");
+				}
+			}
 
 			// Cache results for 10 minutes so if the exact same search is repeated,
 			// data does not need to be re-read from the DB.
@@ -51,18 +70,10 @@ namespace MovieDb.Api.Controllers
 
 		[HttpGet]
 		[Route("genres")]
-		public async Task<ActionResult<IEnumerable<string>>> GetDistinctGenres()
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public async Task<ActionResult<IEnumerable<string>>> GetAllGenres()
 		{
-			return await _cache.GetOrCreateAsync("genres", entry =>
-			{
-				entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
-				return _dbContext.MovieGenre
-					.AsQueryable()
-					.Select(g => g.Genre)
-					.Distinct()
-					.Order()
-					.ToListAsync();
-			}) ?? [];
+			return this.Ok(await this.GetDistinctGenres());
 		}
 
 		[Route("/error")]
@@ -74,7 +85,16 @@ namespace MovieDb.Api.Controllers
 			if (exceptionHandlerFeature?.Error is not null)
 			{
 				string message = exceptionHandlerFeature.Error.Message!;
-				_logger.LogError(exceptionHandlerFeature.Error, message);
+
+				if (exceptionHandlerFeature.Error is BadHttpRequestException)
+				{
+					return this.Problem(detail: message, statusCode: 400);
+				}
+				else
+				{
+					_logger.LogError(exceptionHandlerFeature.Error, "An unhandled exception occurred: {Message}", message);
+				}
+
 				return this.Problem(detail: message);
 			}
 
@@ -95,7 +115,7 @@ namespace MovieDb.Api.Controllers
 					.Where(m => m.Actors.Any(a => EF.Functions.Like(a.ActorName, $"%{searchModel.ActorContains}%")));
 			}
 
-			if (searchModel.Genres?.Any() == true)
+			if (searchModel.Genres?.Length > 0)
 			{
 				query = query.Where(m => m.Genres.Select(g => g.Genre).Intersect(searchModel.Genres).Any());
 			}
@@ -142,6 +162,20 @@ namespace MovieDb.Api.Controllers
 				searchModel.Genres,
 				searchModel.MaxNumberOfResults
 			});			
+		}
+
+		private async Task<IEnumerable<string>> GetDistinctGenres()
+		{
+			return await _cache.GetOrCreateAsync("genres", entry =>
+			{
+				entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+				return _dbContext.MovieGenre
+					.AsQueryable()
+					.Select(g => g.Genre)
+					.Distinct()
+					.Order()
+					.ToListAsync();
+			}) ?? [];
 		}
 	}
 }

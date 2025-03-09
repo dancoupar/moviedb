@@ -23,12 +23,12 @@
 				<label for="titleSearchInput">Title contains:</label>
             </div>
             <div class="column">
-                <label for="maxResultsSelect">Limit results to:</label>                
+                <label for="maxResultsSelect">Limit results to:</label>
             </div>
         </div>       
         <div class="row">
             <div class="column">
-                <input id="titleSearchInput" type="text" maxlength="100">
+                <input id="titleSearchInput" type="text" maxlength="100" required>
             </div>
             <div class="column">
                 <select id="maxResultsSelect">
@@ -58,14 +58,16 @@
         </div>
     </fieldset>
 </div>
-<table id="searchTable" hidden>
-    <thead>
-        <tr>
-            <th><a id="titleSortLink" href="#">Title</a></th>
-            <th><a id="releaseDateSortLink" href="#">Release Date</a></th>
-            <th>Genre</th>
-        </tr>
-    </thead>
-    <tbody id="searchResults"></tbody>
-</table>
-<div id="pagingLinks"></div>
+<div id="resultsPanel" hidden>
+    <table>
+        <thead>
+            <tr>
+                <th><a id="titleSortLink" href="#">Title</a></th>
+                <th><a id="releaseDateSortLink" href="#">Release Date</a></th>
+                <th>Genre</th>
+            </tr>
+        </thead>
+        <tbody id="searchResults"></tbody>
+    </table>
+    <div id="pagingLinks"></div>
+</div>

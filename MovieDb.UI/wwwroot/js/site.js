@@ -3,22 +3,41 @@
 
 // Write your JavaScript code.
 
-var currentPage;
-var currentSort;
-var sortDescending;
+var currentSearch = {
+    titleContains: "",
+    actorContains: "",
+    maxResults: 100,
+    pageSize: 20,
+    pageNumber: 1,
+    sort: "",
+    sortDescending: false,
+    genres: []
+};
 
 window.onload = function () {    
     document.getElementById("searchButton").onclick = function () {
-        currentPage = 1;
-        currentSort = "";
-        sortDescending = false;
+        currentSearch.titleContains = document.getElementById("titleSearchInput").value;
+        currentSearch.actorContains = document.getElementById("actorSearchInput").value;
+        currentSearch.maxResults = parseInt(document.getElementById("maxResultsSelect").value);
+        currentSearch.pageNumber = 1;
+        currentSearch.sort = "";
+        currentSearch.sortDescending = false;
+        currentSearch.genres = [];
+        const genreBoxes = document.getElementById("genres").getElementsByTagName("input");
+        for (let i = 0; i < genreBoxes.length; i++) {
+            if (genreBoxes[i].checked) {
+                currentSearch.genres.push(genreBoxes[i].value);
+            }
+        }
         performSearch();
     };
     document.getElementById("titleSortLink").onclick = function () {
         applySort("Title");
+        return false;
     };
     document.getElementById("releaseDateSortLink").onclick = function () {
         applySort("ReleaseDate");
+        return false;
     };
     document.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -29,23 +48,19 @@ window.onload = function () {
 }
 
 function performSearch() {
-    const titleContains = document.getElementById("titleSearchInput").value;
-    const actorContains = document.getElementById("actorSearchInput").value;
-    const maxResults = document.getElementById("maxResultsSelect").value;
     let searchUrl = `${window.appSettings.apiUrl}/movies`
-        + `?titleContains=${titleContains}`
-        + `&actorContains=${actorContains}`
-        + `&maxNumberOfResults=${maxResults}`
-        + "&pageSize=20"
-        + `&pageNumber=${currentPage}`
-        + `&sortBy=${currentSort}`
-        + `&sortDescending=${sortDescending}`;
-    const genreBoxes = document.getElementById("genres").getElementsByTagName("input");
-    for (let i = 0; i < genreBoxes.length; i++) {
-        if (genreBoxes[i].checked) {
-            searchUrl += `&genres=${genreBoxes[i].value}`;
-        }
+        + `?titleContains=${currentSearch.titleContains}`
+        + `&actorContains=${currentSearch.actorContains}`
+        + `&maxNumberOfResults=${currentSearch.maxResults}`
+        + `&pageSize=${currentSearch.pageSize}`
+        + `&pageNumber=${currentSearch.pageNumber}`
+        + `&sortBy=${currentSearch.sort}`
+        + `&sortDescending=${currentSearch.sortDescending}`;
+
+    for (let i = 0; i < currentSearch.genres.length; i++) {        
+        searchUrl += `&genres=${currentSearch.genres[i]}`;
     }
+
     fetch(searchUrl)        
         .then(async response => {
             const data = await response.json();
@@ -60,27 +75,33 @@ function performSearch() {
 }
 
 function applySort(sortBy) {
-    if (currentSort !== sortBy) {
-        currentSort = sortBy;
-        sortDescending = false;
+    if (currentSearch.sort !== sortBy) {
+        currentSearch.sort = sortBy;
+        currentSearch.sortDescending = false;
     }
     else {
-        sortDescending = !sortDescending;
+        currentSearch.sortDescending = !currentSearch.sortDescending;
     }
     performSearch();
 }
 
-function handleError(data) {    
+function handleError(data) {
+    document.getElementById("resultsPanel").setAttribute("hidden", "hidden");
     const errors = document.getElementById("errors");
     errors.innerHTML = "";
-    for (let field in data.errors) {
-        if (data.errors.hasOwnProperty(field)) {
-            const errorMessages = data.errors[field];
-            errorMessages.forEach(message => {
-                errors.appendChild(document.createTextNode(message));
-                errors.appendChild(document.createElement("br"));
-            });
+    if (typeof data.errors !== "undefined") {
+        for (let field in data.errors) {
+            if (data.errors.hasOwnProperty(field)) {
+                const errorMessages = data.errors[field];
+                errorMessages.forEach(message => {
+                    errors.appendChild(document.createTextNode(message));
+                    errors.appendChild(document.createElement("br"));
+                });
+            }
         }
+    }
+    else {
+        errors.appendChild(document.createTextNode(data.detail));
     }
 }
 
@@ -90,7 +111,7 @@ function renderSearchResults(data) {
     if (data.content.length > 0) {
         currentPage = data.pageNumber;
 
-        document.getElementById("searchTable").removeAttribute("hidden");
+        document.getElementById("resultsPanel").removeAttribute("hidden");
         const tableBody = document.getElementById("searchResults");
         tableBody.innerHTML = "";
 
@@ -113,7 +134,7 @@ function renderSearchResults(data) {
         });
     }
     else {
-        document.getElementById("searchTable").setAttribute("hidden", "hidden");
+        document.getElementById("resultsPanel").setAttribute("hidden", "hidden");
         const errors = document.getElementById("errors");
         errors.appendChild(document.createTextNode("No movies matching the search criteria were found."));
     }
@@ -131,7 +152,7 @@ function renderPagingLinks(data) {
         let pageLink = document.createElement("a");
         pageLink.textContent = i;
         pageLink.href = "#";
-        pageLink.onclick = function () { currentPage = i; performSearch(); };
+        pageLink.onclick = function () { currentSearch.pageNumber = i; performSearch(); return false; };
         pagingLinks.appendChild(pageLink);
     }
 }

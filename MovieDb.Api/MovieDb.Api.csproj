@@ -20,6 +20,12 @@
     <PackageReference Include="System.Runtime.Caching" Version="9.0.2" />
   </ItemGroup>
 
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<!-- Don't warn on missing comments -->
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
+
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Data\" />

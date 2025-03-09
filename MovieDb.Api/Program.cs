@@ -1,4 +1,5 @@
 using MovieDb.Api.DbContexts;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,14 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+	string xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+	string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFileName);
+	options.IncludeXmlComments(xmlPath);
+});
+
 builder.Services.AddDbContext<MovieDbContext>();
 builder.Services.AddMemoryCache();
 builder.Services.AddProblemDetails();
