@@ -20,7 +20,7 @@ namespace MovieDb.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
-            modelBuilder.Entity("MovieDb.Api.Entities.Movie", b =>
+            modelBuilder.Entity("MovieDb.Domain.DataModels.Movie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

@@ -20,7 +20,7 @@ namespace MovieDb.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
-            modelBuilder.Entity("MovieDb.Api.Entities.Movie", b =>
+            modelBuilder.Entity("MovieDb.Domain.DataModels.Movie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,7 +68,7 @@ namespace MovieDb.Infrastructure.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("MovieDb.Api.Entities.MovieGenre", b =>
+            modelBuilder.Entity("MovieDb.Domain.DataModels.MovieGenre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,9 +88,9 @@ namespace MovieDb.Infrastructure.Migrations
                     b.ToTable("MovieGenre");
                 });
 
-            modelBuilder.Entity("MovieDb.Api.Entities.MovieGenre", b =>
+            modelBuilder.Entity("MovieDb.Domain.DataModels.MovieGenre", b =>
                 {
-                    b.HasOne("MovieDb.Api.Entities.Movie", "Movie")
+                    b.HasOne("MovieDb.Domain.DataModels.Movie", "Movie")
                         .WithMany("Genres")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -99,7 +99,7 @@ namespace MovieDb.Infrastructure.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("MovieDb.Api.Entities.Movie", b =>
+            modelBuilder.Entity("MovieDb.Domain.DataModels.Movie", b =>
                 {
                     b.Navigation("Genres");
                 });

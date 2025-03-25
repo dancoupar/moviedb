@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MovieDb.Api.Models;
 using MovieDb.Application.Interfaces;
 using MovieDb.Application.Models;
-using MovieDb.Domain;
 
 namespace MovieDb.Api.Controllers
 {
