@@ -1,14 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MovieDb.Domain.DataModels
+﻿namespace MovieDb.Domain.DataModels
 {
-	//[Index(nameof(Id))]
-	//[Index(nameof(Title))]
 	public class Movie
 	{
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 
 		public DateOnly ReleaseDate { get; set; }

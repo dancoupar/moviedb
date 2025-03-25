@@ -60,7 +60,31 @@ namespace MovieDb.Infrastructure.DbContexts
 				.HasMany(e => e.Actors)
 				.WithOne(e => e.Movie)
 				.HasForeignKey(e => e.MovieId)
-				.HasPrincipalKey(e => e.Id);			
+				.HasPrincipalKey(e => e.Id);
+
+			modelBuilder.Entity<Movie>()
+				.HasKey(e => e.Id);
+
+			modelBuilder.Entity<Movie>()
+				.Property(m => m.Id)
+				.ValueGeneratedOnAdd();
+
+			modelBuilder.Entity<Movie>()
+				.HasIndex(e => e.Title);
+
+			modelBuilder.Entity<MovieGenre>()
+				.HasKey(e => e.Id);
+
+			modelBuilder.Entity<MovieGenre>()
+				.Property(m => m.Id)
+				.ValueGeneratedOnAdd();
+
+			modelBuilder.Entity<MovieActor>()
+				.HasKey(e => e.Id);
+
+			modelBuilder.Entity<MovieActor>()
+				.Property(m => m.Id)
+				.ValueGeneratedOnAdd();
 		}
 	}
 }
