@@ -22,7 +22,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieDb.Application", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieDb.UI", "src\MovieDb.UI\MovieDb.UI.csproj", "{7BFF7F99-9019-4DBB-B948-B0DBD6E699DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieDb.Tests", "tests\MovieDb.Tests\MovieDb.Tests.csproj", "{DAB31AD3-9612-41CD-B4DF-59753CE5DA15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieDb.Application.Tests", "tests\MovieDb.Application.Tests\MovieDb.Application.Tests.csproj", "{DAB31AD3-9612-41CD-B4DF-59753CE5DA15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieDb.Infrastructure.Tests", "tests\MovieDb.Infrastructure.Tests\MovieDb.Infrastructure.Tests.csproj", "{6F45582C-0E51-476B-8E3F-994B73D0B3B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieDb.Tests.Common", "tests\MovieDb.Tests.Common\MovieDb.Tests.Common.csproj", "{72644370-A283-4ABD-A278-3B639FF9FED1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +58,14 @@ Global
 		{DAB31AD3-9612-41CD-B4DF-59753CE5DA15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAB31AD3-9612-41CD-B4DF-59753CE5DA15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAB31AD3-9612-41CD-B4DF-59753CE5DA15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F45582C-0E51-476B-8E3F-994B73D0B3B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F45582C-0E51-476B-8E3F-994B73D0B3B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F45582C-0E51-476B-8E3F-994B73D0B3B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F45582C-0E51-476B-8E3F-994B73D0B3B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72644370-A283-4ABD-A278-3B639FF9FED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72644370-A283-4ABD-A278-3B639FF9FED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72644370-A283-4ABD-A278-3B639FF9FED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72644370-A283-4ABD-A278-3B639FF9FED1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,5 +77,7 @@ Global
 		{461D1550-F22B-4D56-9964-33D05FF1773F} = {EA621346-98AE-4507-A424-22E6CEDA6DCC}
 		{7BFF7F99-9019-4DBB-B948-B0DBD6E699DF} = {EA621346-98AE-4507-A424-22E6CEDA6DCC}
 		{DAB31AD3-9612-41CD-B4DF-59753CE5DA15} = {A29C6362-A968-4D2F-B6A5-315B4A718080}
+		{6F45582C-0E51-476B-8E3F-994B73D0B3B3} = {A29C6362-A968-4D2F-B6A5-315B4A718080}
+		{72644370-A283-4ABD-A278-3B639FF9FED1} = {A29C6362-A968-4D2F-B6A5-315B4A718080}
 	EndGlobalSection
 EndGlobal

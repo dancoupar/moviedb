@@ -1,42 +1,41 @@
-﻿using MovieDb.Application.Interfaces;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.Extensions.DependencyInjection;
+using MovieDb.Application.Interfaces;
 using MovieDb.Application.Models;
 using MovieDb.Domain.Models;
 
 namespace MovieDb.Application.Services
 {
-	public class MovieSearchService(IMovieRepository movieRepository) : IMovieSearchService
+	public class MovieSearchService([FromKeyedServices("Caching")] IMovieRepository movieRepository, AbstractValidator<MovieSearchModel> validator) : IMovieSearchService
 	{
 		private readonly IMovieRepository _movieRepository = movieRepository;
+		private readonly AbstractValidator<MovieSearchModel> _validator = validator;
 
-		public async Task<IEnumerable<MovieSearchResult>> SearchMovies(MovieSearchModel searchModel)
+		public async Task<SearchResults<MovieSearchResult>> Search(MovieSearchModel searchModel)
 		{
-			ArgumentNullException.ThrowIfNull(nameof(searchModel));
+			ValidationResult validationResult = await _validator.ValidateAsync(searchModel);
 
-			IEnumerable<Movie> searchResults = await _movieRepository.Search(searchModel);
-
-			if (searchModel.SortBy is not null)
+			if (!validationResult.IsValid)
 			{
-				Func<Movie, object>? sortExpression = GetSortByExpression(searchModel.SortBy);
-				searchResults = searchModel.SortDescending ? searchResults.OrderByDescending(sortExpression) : searchResults.OrderBy(sortExpression);
+				throw new ValidationException(validationResult.Errors);
 			}
 
-			return searchResults.Select(r => ConvertToSearchResult(r)).ToList();
+			SearchResults<Movie> searchResults = await _movieRepository.Search(searchModel);
+
+			return new SearchResults<MovieSearchResult>()
+			{
+				PageSize = searchResults.PageSize,
+				PageNumber = searchResults.PageNumber,
+				TotalRecords = searchResults.TotalRecords,
+				Results = searchResults.Results.Select(r => ConvertToSearchResult(r)).ToList()
+			};
 		}
 
 		public async Task<IEnumerable<string>> GetDistinctGenres()
 		{
 			IEnumerable<string> genres = await _movieRepository.GetDistinctGenres();
 			return genres;
-		}
-
-		private static Func<Movie, object> GetSortByExpression(string? sortBy)
-		{
-			return sortBy switch
-			{
-				"Title" => m => m.Title,
-				"ReleaseDate" => m => m.ReleaseDate,
-				_ => throw new NotSupportedException($"Sorting by '{sortBy}' is not supported.")
-			};
 		}
 
 		private static MovieSearchResult ConvertToSearchResult(Movie entity)

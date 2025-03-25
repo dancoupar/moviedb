@@ -17,7 +17,6 @@ builder.Services.AddSwaggerGen(options =>
 	options.IncludeXmlComments(xmlPath);
 });
 
-builder.Services.AddMemoryCache();
 builder.Services.AddProblemDetails();
 builder.Services.AddLogging((builder) => builder.AddConsole());
 builder.Services.AddApplicationServices();

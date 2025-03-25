@@ -5,7 +5,7 @@ namespace MovieDb.Application.Interfaces
 {
 	public interface IMovieRepository
 	{
-		Task<IEnumerable<Movie>> Search(MovieSearchModel searchModel);
+		Task<SearchResults<Movie>> Search(MovieSearchModel searchModel);
 
 		Task<IEnumerable<string>> GetDistinctGenres();
 	}

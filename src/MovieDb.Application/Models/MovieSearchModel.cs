@@ -13,11 +13,6 @@
 		public string? ActorContains { get; set; }
 
 		/// <summary>
-		/// The maximum number of search results to return. Can be between 1 and 100. If unspecified, a value of 100 is applied.
-		/// </summary>
-		public int? MaxNumberOfResults { get; set; }
-
-		/// <summary>
 		/// The size of each page in the results returned. Can be between 1 and 100.
 		/// </summary>
 		public int PageSize { get; set; }

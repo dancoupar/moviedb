@@ -21,7 +21,7 @@ namespace MovieDb.Infrastructure.DbContexts
 			}
 			
 			options
-				.UseSqlite("Data Source=data/movies.db")
+				.UseSqlite("Data Source=../../data/movies.db")
 				.UseSeeding((context, _) =>
 				{
 					DbSet<Movie> moviesDbSet = context.Set<Movie>();

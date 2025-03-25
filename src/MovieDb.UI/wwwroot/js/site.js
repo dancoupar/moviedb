@@ -6,8 +6,7 @@
 var currentSearch = {
     titleContains: "",
     actorContains: "",
-    maxResults: 100,
-    pageSize: 20,
+    pageSize: 10,
     pageNumber: 1,
     sort: "",
     sortDescending: false,
@@ -18,7 +17,7 @@ window.onload = function () {
     document.getElementById("searchButton").onclick = function () {
         currentSearch.titleContains = document.getElementById("titleSearchInput").value;
         currentSearch.actorContains = document.getElementById("actorSearchInput").value;
-        currentSearch.maxResults = parseInt(document.getElementById("maxResultsSelect").value);
+        currentSearch.pageSize = parseInt(document.getElementById("pageSizeSelect").value);
         currentSearch.pageNumber = 1;
         currentSearch.sort = "";
         currentSearch.sortDescending = false;
@@ -51,7 +50,6 @@ function performSearch() {
     let searchUrl = `${window.appSettings.apiUrl}/movies`
         + `?titleContains=${currentSearch.titleContains}`
         + `&actorContains=${currentSearch.actorContains}`
-        + `&maxNumberOfResults=${currentSearch.maxResults}`
         + `&pageSize=${currentSearch.pageSize}`
         + `&pageNumber=${currentSearch.pageNumber}`
         + `&sortBy=${currentSearch.sort}`
