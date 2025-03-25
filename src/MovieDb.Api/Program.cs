@@ -1,4 +1,5 @@
-using MovieDb.Api.DbContexts;
+using MovieDb.Application;
+using MovieDb.Infrastructure;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,10 +17,11 @@ builder.Services.AddSwaggerGen(options =>
 	options.IncludeXmlComments(xmlPath);
 });
 
-builder.Services.AddDbContext<MovieDbContext>();
 builder.Services.AddMemoryCache();
 builder.Services.AddProblemDetails();
 builder.Services.AddLogging((builder) => builder.AddConsole());
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
 
 // Add CORS policies for running in VS and Docker
 builder.Services.AddCors((builder) =>
