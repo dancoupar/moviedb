@@ -8,7 +8,7 @@
         "DebugTarget": "http"
       },
       {
-        "Path": "MovieDb.UI\\MovieDb.UI.csproj",
+        "Path": "src\\MovieDb.UI\\MovieDb.UI.csproj",
         "Action": "Start",
         "DebugTarget": "http"
       }

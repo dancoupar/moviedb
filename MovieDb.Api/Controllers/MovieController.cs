@@ -1,19 +1,18 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using MovieDb.Api.DbContexts;
-using MovieDb.Api.Entities;
 using MovieDb.Api.Models;
+using MovieDb.Application.Interfaces;
+using MovieDb.Application.Models;
 using System.Text.Json;
 
 namespace MovieDb.Api.Controllers
 {
 	[ApiController]
 	[Produces("application/json")]
-	public class MovieController(MovieDbContext dbContext, IMemoryCache cache, ILogger<MovieController> logger) : ControllerBase
+	public class MovieController(IMovieSearchService movieSearchService, IMemoryCache cache, ILogger<MovieController> logger) : ControllerBase
     {
-		private readonly MovieDbContext _dbContext = dbContext;
+		private readonly IMovieSearchService _movieSearchService = movieSearchService;
 		private readonly IMemoryCache _cache = cache;
 		private readonly ILogger<MovieController> _logger = logger;
 
@@ -27,7 +26,7 @@ namespace MovieDb.Api.Controllers
 		[Route("movies")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<SearchResults>> SearchMovies([FromQuery] SearchModel searchModel)
+		public async Task<ActionResult<SearchResponseModel>> SearchMovies([FromQuery] SearchRequestModel searchModel)
 		{
 			ArgumentNullException.ThrowIfNull(searchModel, nameof(searchModel));
 
@@ -44,19 +43,23 @@ namespace MovieDb.Api.Controllers
 			// Cache results for 10 minutes so if the exact same search is repeated,
 			// data does not need to be re-read from the DB.
 
-			IEnumerable<Movie> searchResults = await _cache.GetOrCreateAsync(CreateCacheKey(searchModel), entry =>
+			IEnumerable<MovieSearchResult> searchResults = await _cache.GetOrCreateAsync(CreateCacheKey(searchModel), entry =>
 			{
 				entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
-				return this.SearchDb(searchModel);
+				return _movieSearchService.SearchMovies(new MovieSearchModel()
+				{
+					TitleContains = searchModel.TitleContains,
+					ActorContains = searchModel.ActorContains,
+					MaxNumberOfResults = searchModel.MaxNumberOfResults,
+					PageSize = searchModel.PageSize,
+					PageNumber = searchModel.PageNumber,
+					SortBy = searchModel.SortBy,
+					SortDescending = searchModel.SortDescending,
+					Genres = searchModel.Genres,
+				});
 			}) ?? [];
 
-			if (searchModel.SortBy is not null)
-			{
-				Func<Movie, object>? sortExpression = sortExpression = GetSortByExpression(searchModel.SortBy);
-				searchResults = searchModel.SortDescending ? searchResults.OrderByDescending(sortExpression) : searchResults.OrderBy(sortExpression);
-			}
-
-			return new SearchResults()
+			return new SearchResponseModel()
 			{
 				PageNumber = searchModel.PageNumber,
 				PageSize = searchModel.PageSize,
@@ -64,7 +67,6 @@ namespace MovieDb.Api.Controllers
 				Content = searchResults
 					.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
 					.Take(searchModel.PageSize)
-					.Select(m => ConvertToSearchResult(m))
 			};
         }
 
@@ -106,62 +108,7 @@ namespace MovieDb.Api.Controllers
 			return this.Problem();
 		}
 
-		private async Task<List<Movie>> SearchDb(SearchModel searchModel)
-		{
-			IQueryable<Movie> query = _dbContext.Movies
-				.AsQueryable()
-				.Include(m => m.Genres)
-				.Where(m => EF.Functions.Like(m.Title, $"%{searchModel.TitleContains}%"));
-			
-			if (!string.IsNullOrEmpty(searchModel.ActorContains))
-			{
-				query = query
-					.Include(m => m.Actors)
-					.Where(m => m.Actors.Any(a => EF.Functions.Like(a.ActorName, $"%{searchModel.ActorContains}%")));
-			}
-
-			if (searchModel.Genres?.Length > 0)
-			{
-				query = query.Where(m => m.Genres.Select(g => g.Genre).Intersect(searchModel.Genres).Any());
-			}
-
-			// Initial sort to ensure deterministic results when search is capped
-			query = query.OrderBy(m => m.Id);
-			
-			return await query
-				.Take(searchModel.MaxNumberOfResults ?? 100)
-				.AsSingleQuery()
-				.ToListAsync();
-		}
-
-		private static Func<Movie, object> GetSortByExpression(string? sortBy)
-		{
-			return sortBy switch
-			{
-				"Title" => m => m.Title,
-				"ReleaseDate" => m => m.ReleaseDate,
-				_ => throw new NotSupportedException($"Sorting by '{sortBy}' is not supported.")
-			};
-		}
-
-		private static MovieSearchResult ConvertToSearchResult(Movie entity)
-		{
-			return new MovieSearchResult()
-			{
-				Id = entity.Id,
-				Title = entity.Title,
-				ReleaseDate = entity.ReleaseDate,
-				Overview = entity.Overview,
-				Popularity = entity.Popularity,
-				VoteCount = entity.VoteCount,
-				VoteAverage = entity.VoteAverage,
-				OriginalLanguage = entity.OriginalLanguage,
-				Genre = string.Join(", ", entity.Genres.Select(g => g.Genre)),
-				PosterUrl = entity.PosterUrl
-			};
-		}
-
-		private static string CreateCacheKey(SearchModel searchModel)
+		private static string CreateCacheKey(SearchRequestModel searchModel)
 		{
 			return JsonSerializer.Serialize(new
 			{  
@@ -169,7 +116,7 @@ namespace MovieDb.Api.Controllers
 				searchModel.ActorContains,
 				searchModel.Genres,
 				searchModel.MaxNumberOfResults
-			});			
+			});
 		}
 
 		private async Task<IEnumerable<string>> GetDistinctGenres()
@@ -177,13 +124,8 @@ namespace MovieDb.Api.Controllers
 			return await _cache.GetOrCreateAsync("genres", entry =>
 			{
 				entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
-				return _dbContext.MovieGenre
-					.AsQueryable()
-					.Select(g => g.Genre)
-					.Distinct()
-					.Order()
-					.AsSingleQuery()
-					.ToListAsync();
+				return _movieSearchService.GetDistinctGenres();
+
 			}) ?? [];
 		}
 	}
