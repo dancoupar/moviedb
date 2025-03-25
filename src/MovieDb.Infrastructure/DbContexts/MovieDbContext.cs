@@ -1,6 +1,6 @@
 ﻿using CsvHelper;
 using Microsoft.EntityFrameworkCore;
-using MovieDb.Domain.Models;
+using MovieDb.Domain.DataModels;
 using System.Globalization;
 
 namespace MovieDb.Infrastructure.DbContexts

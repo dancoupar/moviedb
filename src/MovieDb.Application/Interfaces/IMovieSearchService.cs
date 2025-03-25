@@ -1,5 +1,5 @@
 ﻿using MovieDb.Application.Models;
-using MovieDb.Domain.Models;
+using MovieDb.Domain;
 
 namespace MovieDb.Application.Interfaces
 {

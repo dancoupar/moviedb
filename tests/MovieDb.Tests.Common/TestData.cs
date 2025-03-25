@@ -1,4 +1,4 @@
-﻿using MovieDb.Domain.Models;
+﻿using MovieDb.Domain.DataModels;
 
 namespace MovieDb.Tests.Common
 {

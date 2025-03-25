@@ -1,4 +1,4 @@
-﻿namespace MovieDb.Domain.Models
+﻿namespace MovieDb.Application.Models
 {
 	public class SearchResults<T>
 	{

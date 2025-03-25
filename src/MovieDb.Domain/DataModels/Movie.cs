@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MovieDb.Domain.Models
+namespace MovieDb.Domain.DataModels
 {
 	//[Index(nameof(Id))]
 	//[Index(nameof(Title))]

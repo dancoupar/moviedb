@@ -1,9 +1,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using MovieDb.Application.Interfaces;
 using MovieDb.Application.Models;
-using MovieDb.Application.Services;
-using MovieDb.Domain.Models;
+using MovieDb.Domain.DataModels;
 using MovieDb.Infrastructure.DbContexts;
 using MovieDb.Infrastructure.Repositories;
 using MovieDb.Tests.Common;

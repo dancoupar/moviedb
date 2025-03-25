@@ -1,5 +1,5 @@
 ﻿using CsvHelper.Configuration;
-using MovieDb.Domain.Models;
+using MovieDb.Domain.DataModels;
 
 namespace MovieDb.Infrastructure.DbContexts
 {
