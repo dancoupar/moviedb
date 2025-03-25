@@ -28,7 +28,7 @@ namespace MovieDb.Infrastructure.Repositories
 
 			if (searchModel.Genres?.Length > 0)
 			{
-				query = query.Where(m => m.Genres.Select(g => g.Genre).Intersect(searchModel.Genres).Any());
+				query = query.Where(m => m.Genres.Select(g => g.GenreName).Intersect(searchModel.Genres).Any());
 			}
 
 			var totalRecords = await query.CountAsync();
@@ -50,7 +50,7 @@ namespace MovieDb.Infrastructure.Repositories
 		public async Task<IEnumerable<string>> GetDistinctGenres()
 		{
 			return await _dbContext.MovieGenre
-				.Select(g => g.Genre)
+				.Select(g => g.GenreName)
 				.Distinct()
 				.Order()
 				.AsSingleQuery()

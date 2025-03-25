@@ -6,8 +6,12 @@
 
 		public int MovieId { get; set; }
 
-		public required string Genre { get; set; }
+		public required string GenreName { get; set; }
+
+		public int GenreId { get; set; }
 
 		public Movie? Movie { get; set; }
+
+		public Genre? Genre { get; set; }
 	}
 }

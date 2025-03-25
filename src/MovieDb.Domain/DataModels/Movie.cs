@@ -20,7 +20,7 @@
 
 		public required Uri PosterUrl { get; set; }
 
-		public required ICollection<MovieGenre> Genres { get; set; }
+		public List<MovieGenre> Genres { get; set; } = [];
 
 		public required ICollection<MovieActor> Actors { get; set; }
 	}

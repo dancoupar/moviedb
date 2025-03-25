@@ -13,6 +13,8 @@ namespace MovieDb.Infrastructure.DbContexts
 
 		public DbSet<MovieActor> MovieActor { get; set; }
 
+		public DbSet<Genre> Genres { get; set; }
+
 		protected override void OnConfiguring(DbContextOptionsBuilder options)
 		{
 			if (options.IsConfigured)
@@ -51,12 +53,6 @@ namespace MovieDb.Infrastructure.DbContexts
 				.UseCollation("NOCASE");
 
 			modelBuilder.Entity<Movie>()
-				.HasMany(e => e.Genres)
-				.WithOne(e => e.Movie)
-				.HasForeignKey(e => e.MovieId)
-				.HasPrincipalKey(e => e.Id);
-
-			modelBuilder.Entity<Movie>()
 				.HasMany(e => e.Actors)
 				.WithOne(e => e.Movie)
 				.HasForeignKey(e => e.MovieId)
@@ -85,6 +81,19 @@ namespace MovieDb.Infrastructure.DbContexts
 			modelBuilder.Entity<MovieActor>()
 				.Property(m => m.Id)
 				.ValueGeneratedOnAdd();
+
+			modelBuilder.Entity<MovieGenre>()
+				.HasKey(mg => mg.Id);
+
+			modelBuilder.Entity<MovieGenre>()
+				.HasOne(mg => mg.Movie)
+				.WithMany(m => m.Genres)
+				.HasForeignKey(mg => mg.MovieId);
+
+			modelBuilder.Entity<MovieGenre>()
+				.HasOne(mg => mg.Genre)
+				.WithMany(g => g.MovieGenres)
+				.HasForeignKey(mg => mg.GenreId);
 		}
 	}
 }
