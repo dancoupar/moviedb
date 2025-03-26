@@ -96,6 +96,9 @@ namespace MovieDb.Infrastructure.DbContexts
 				.HasOne(mg => mg.Genre)
 				.WithMany(g => g.MovieGenres)
 				.HasForeignKey(mg => mg.GenreId);
+
+			modelBuilder.Entity<Actor>()
+				.HasIndex(a => a.Name);
 		}
 	}
 }
