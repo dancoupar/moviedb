@@ -5,7 +5,7 @@ using MovieDb.Application.Interfaces;
 using MovieDb.Application.Models;
 using MovieDb.Application.Validators;
 
-namespace MovieDb.Application.Tests.Services
+namespace MovieDb.Application.Tests.Validators
 {
 	public class MovieSearchModelValidatorTests
 	{

@@ -12,7 +12,7 @@ namespace MovieDb.Application
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services)
 		{
 			services.AddScoped<IMovieSearchService, MovieSearchService>();
-			services.AddScoped<AbstractValidator<MovieSearchModel>, MovieSearchModelValidator>();
+			services.AddScoped<IValidator<MovieSearchModel>, MovieSearchModelValidator>();
 			return services;
 		}
 	}
