@@ -337,30 +337,5 @@ namespace MovieDb.Infrastructure.Tests.Queries
 			movies.ElementAt(1).Id.Should().Be(10);
 			movies.ElementAt(0).Id.Should().Be(1);
 		}
-
-		//[Fact]
-		//public void Searching_by_an_invalid_genre_throws_bad_request()
-		//{
-		//	// Arrange
-		//	using var fakeDbContext = GetFakeDbContext();
-		//	fakeDbContext.Movies.AddRange(TestData);
-		//	fakeDbContext.SaveChanges();
-
-		//	var sut = new MovieRepository(fakeDbContext);
-
-		//	// Act
-		//	Func<Task> act = async () =>
-		//	{
-		//		await sut.SearchMovies(new SearchModel()
-		//		{
-		//			TitleContains = string.Empty,
-		//			Genres = ["InvalidGenre"],
-		//			PageNumber = 1,
-		//			PageSize = 100
-		//		});
-		//	};
-
-		//	act.Should().ThrowAsync<BadHttpRequestException>();
-		//}
 	}
 }

@@ -35,7 +35,7 @@ namespace MovieDb.Application.Tests.Services
 					Id = 2,
 					Title = "The Godfather",
 					ReleaseDate = new DateOnly(1972, 3, 14),
-					Genre = "Drame, Crime"
+					Genre = "Drama, Crime"
 				},
 				new()
 				{

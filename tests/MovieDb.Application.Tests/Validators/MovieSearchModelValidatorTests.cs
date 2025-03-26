@@ -54,7 +54,7 @@ namespace MovieDb.Application.Tests.Validators
 		[InlineData(3, true)]
 		[InlineData(100, true)]
 		[InlineData(101, false)]
-		public async Task Title_contains_must_be_between_3_and_100_characters_if_specified(int numberOfCharacters, bool expectedResult)
+		public async Task Actor_contains_must_be_between_3_and_100_characters_if_specified(int numberOfCharacters, bool expectedResult)
 		{
 			// Arrange
 			var sut = new MovieSearchModelValidator(new Mock<IGenresQuery>().Object);
