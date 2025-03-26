@@ -13,6 +13,7 @@ namespace MovieDb.Application.Validators
 		{
 			_genresQuery = genresQuery;
 
+			this.RuleFor(m => m.TitleContains).NotEmpty();
 			this.RuleFor(m => m.TitleContains).MinimumLength(3).MaximumLength(100);
 			this.RuleFor(m => m.ActorContains).MinimumLength(3).MaximumLength(100);
 			this.RuleFor(m => m.PageSize).InclusiveBetween(1, 100);

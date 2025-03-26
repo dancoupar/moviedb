@@ -5,7 +5,7 @@ using MovieDb.Infrastructure.DbContexts;
 using MovieDb.Infrastructure.Queries;
 using MovieDb.Tests.Common;
 
-namespace MovieDb.Infrastructure.Tests
+namespace MovieDb.Infrastructure.Tests.Queries
 {
 	public class MovieSearchQueryTests
 	{
