@@ -104,10 +104,6 @@ namespace MovieDb.Infrastructure.Migrations
                     b.Property<int>("GenreId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("GenreName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("MovieId")
                         .HasColumnType("INTEGER");
 
