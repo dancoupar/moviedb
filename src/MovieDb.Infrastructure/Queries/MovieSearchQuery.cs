@@ -17,8 +17,12 @@ namespace MovieDb.Infrastructure.Queries
 
 			IQueryable<Movie> query = _dbContext.Movies
 				.Include(m => m.Genres)
-				.ThenInclude(m => m.Genre)
-				.Where(m => EF.Functions.Like(m.Title, $"%{searchModel.TitleContains}%"));
+				.ThenInclude(m => m.Genre);
+
+			if (!string.IsNullOrEmpty(searchModel.TitleContains))
+			{
+				query = query.Where(m => EF.Functions.Like(m.Title, $"%{searchModel.TitleContains}%"));
+			}
 
 			if (!string.IsNullOrEmpty(searchModel.ActorContains))
 			{
@@ -32,9 +36,15 @@ namespace MovieDb.Infrastructure.Queries
 				query = query.Where(m => m.Genres.Select(g => g.Genre == null ? null : g.Genre.Name).Intersect(searchModel.Genres).Any());
 			}
 
+			// First count the total number of matching results as a separate query.
+			// This is needed for paging purposes.
+
 			var totalRecords = await query.CountAsync();
 			
 			query = ApplySort(query, searchModel.SortBy, searchModel.SortDescending);
+
+			// Materialize the query, fetching only the data needed for the current page
+			// and only the columns we're interested in.
 
 			IEnumerable<MovieSearchResult> results = await query
 				.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
