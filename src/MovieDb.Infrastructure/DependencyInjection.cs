@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MovieDb.Application.Interfaces;
 using MovieDb.Infrastructure.DbContexts;
-using MovieDb.Infrastructure.Repositories;
+using MovieDb.Infrastructure.Queries;
 
 namespace MovieDb.Infrastructure
 {
@@ -13,8 +13,8 @@ namespace MovieDb.Infrastructure
 			services.AddDbContext<MovieDbContext>();
 			services.AddMemoryCache();
 
-			services.AddScoped<IMovieRepository, MovieRepository>();
-			services.AddKeyedScoped<IMovieRepository, CachingMovieRepository>("Caching");
+			services.AddScoped<IMovieSearchQuery, MovieSearchQuery>();
+			services.AddKeyedScoped<IMovieSearchQuery, CachingMovieSearchQuery>("Caching");
 
 			return services;
 		}

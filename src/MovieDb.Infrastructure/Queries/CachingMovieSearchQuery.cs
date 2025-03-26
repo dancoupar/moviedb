@@ -4,16 +4,16 @@ using MovieDb.Application.Models;
 using MovieDb.Domain.DataModels;
 using System.Text.Json;
 
-namespace MovieDb.Infrastructure.Repositories
+namespace MovieDb.Infrastructure.Queries
 {
-	public class CachingMovieRepository(IMovieRepository repository, IMemoryCache cache) : IMovieRepository
+	public class CachingMovieSearchQuery(IMovieSearchQuery repository, IMemoryCache cache) : IMovieSearchQuery
 	{
-		private readonly IMovieRepository _repository = repository;
+		private readonly IMovieSearchQuery _repository = repository;
 		private readonly IMemoryCache _cache = cache;
 
-		public async Task<SearchResults<Movie>> Search(MovieSearchModel searchModel)
+		public async Task<SearchResults<MovieSearchResult>> Search(MovieSearchModel searchModel)
 		{
-			SearchResults<Movie>? searchResults = await _cache.GetOrCreateAsync(CreateSearchResultsCacheKey(searchModel), entry =>
+			SearchResults<MovieSearchResult>? searchResults = await _cache.GetOrCreateAsync(CreateSearchResultsCacheKey(searchModel), entry =>
 			{
 				entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
 				return _repository.Search(searchModel);

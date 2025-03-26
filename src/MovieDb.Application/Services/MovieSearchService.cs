@@ -7,9 +7,9 @@ using MovieDb.Domain.DataModels;
 
 namespace MovieDb.Application.Services
 {
-	public class MovieSearchService([FromKeyedServices("Caching")] IMovieRepository movieRepository, AbstractValidator<MovieSearchModel> validator) : IMovieSearchService
+	public class MovieSearchService([FromKeyedServices("Caching")] IMovieSearchQuery movieRepository, AbstractValidator<MovieSearchModel> validator) : IMovieSearchService
 	{
-		private readonly IMovieRepository _movieRepository = movieRepository;
+		private readonly IMovieSearchQuery _movieRepository = movieRepository;
 		private readonly AbstractValidator<MovieSearchModel> _validator = validator;
 
 		public async Task<SearchResults<MovieSearchResult>> Search(MovieSearchModel searchModel)
@@ -21,38 +21,13 @@ namespace MovieDb.Application.Services
 				throw new ValidationException(validationResult.Errors);
 			}
 
-			SearchResults<Movie> searchResults = await _movieRepository.Search(searchModel);
-
-			return new SearchResults<MovieSearchResult>()
-			{
-				PageSize = searchResults.PageSize,
-				PageNumber = searchResults.PageNumber,
-				TotalRecords = searchResults.TotalRecords,
-				Results = searchResults.Results.Select(r => ConvertToSearchResult(r)).ToList()
-			};
+			return await _movieRepository.Search(searchModel);
 		}
 
 		public async Task<IEnumerable<string>> GetDistinctGenres()
 		{
 			IEnumerable<Genre> genres = await _movieRepository.GetDistinctGenres();
 			return genres.Select(g => g.Name).ToList();
-		}
-
-		private static MovieSearchResult ConvertToSearchResult(Movie entity)
-		{
-			return new MovieSearchResult()
-			{
-				Id = entity.Id,
-				Title = entity.Title,
-				ReleaseDate = entity.ReleaseDate,
-				Overview = entity.Overview,
-				Popularity = entity.Popularity,
-				VoteCount = entity.VoteCount,
-				VoteAverage = entity.VoteAverage,
-				OriginalLanguage = entity.OriginalLanguage,
-				Genre = string.Join(", ", entity.Genres.Select(g => g.Genre?.Name)),
-				PosterUrl = entity.PosterUrl
-			};
-		}
+		}		
 	}
 }

@@ -3,9 +3,9 @@ using MovieDb.Domain.DataModels;
 
 namespace MovieDb.Application.Interfaces
 {
-	public interface IMovieRepository
+	public interface IMovieSearchQuery
 	{
-		Task<SearchResults<Movie>> Search(MovieSearchModel searchModel);
+		Task<SearchResults<MovieSearchResult>> Search(MovieSearchModel searchModel);
 
 		Task<IEnumerable<Genre>> GetDistinctGenres();
 	}

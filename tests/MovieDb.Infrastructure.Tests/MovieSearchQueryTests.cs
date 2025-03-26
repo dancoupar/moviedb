@@ -1,14 +1,13 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using MovieDb.Application.Models;
-using MovieDb.Domain.DataModels;
 using MovieDb.Infrastructure.DbContexts;
-using MovieDb.Infrastructure.Repositories;
+using MovieDb.Infrastructure.Queries;
 using MovieDb.Tests.Common;
 
 namespace MovieDb.Infrastructure.Tests
 {
-	public class MovieRepositoryTests
+	public class MovieSearchQueryTests
 	{
 		private static MovieDbContext GetFakeDbContext()
 		{
@@ -37,10 +36,10 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = searchTerm,
 				PageNumber = 1,
@@ -48,7 +47,7 @@ namespace MovieDb.Infrastructure.Tests
 			});
 
 			// Assert
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
 			movies.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 			movies.Count().Should().Be(expectedNumberOfResults);
@@ -62,17 +61,17 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = "godfather",
 				PageNumber = 1,
 				PageSize = 100
 			});
 
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
 			movies.Count().Should().Be(3);
 		}
@@ -90,10 +89,10 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = string.Empty,
 				ActorContains = searchTerm,
@@ -102,7 +101,7 @@ namespace MovieDb.Infrastructure.Tests
 			});
 
 			// Assert
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
 			movies.Should().AllSatisfy(m => m.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 			movies.Count().Should().Be(expectedNumberOfResults);
@@ -116,10 +115,10 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = string.Empty,
 				ActorContains = "marlon",
@@ -128,7 +127,7 @@ namespace MovieDb.Infrastructure.Tests
 			});
 
 			// Assert
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
 			movies.Count().Should().Be(1);
 		}
@@ -146,10 +145,10 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = string.Empty,
 				PageNumber = pageNumber,
@@ -157,7 +156,7 @@ namespace MovieDb.Infrastructure.Tests
 			});
 
 			// Assert
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
 			movies.Select(m => m.Id).Should().BeEquivalentTo(TestData.Movies.Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(m => m.Id));
 		}
@@ -175,10 +174,10 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = string.Empty,
 				Genres = genres,
@@ -187,9 +186,9 @@ namespace MovieDb.Infrastructure.Tests
 			});
 
 			// Assert
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
-			movies.Should().AllSatisfy(m => m.Genres.Select(g => g.Genre?.Name).Intersect(genres).Should().NotBeEmpty());
+			movies.Should().AllSatisfy(m => m.Genre.Split(", ").Intersect(genres).Should().NotBeEmpty());
 			movies.Count().Should().Be(expectedNumberOfResults);
 		}
 
@@ -201,10 +200,10 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "Title",
@@ -213,7 +212,7 @@ namespace MovieDb.Infrastructure.Tests
 			});
 
 			//	// Assert			
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
 			movies.ElementAt(0).Id.Should().Be(2);
 			movies.ElementAt(1).Id.Should().Be(6);
@@ -237,10 +236,10 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "Title",
@@ -250,7 +249,7 @@ namespace MovieDb.Infrastructure.Tests
 			});
 
 			// Assert
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
 			movies.ElementAt(11).Id.Should().Be(2);
 			movies.ElementAt(10).Id.Should().Be(6);
@@ -274,10 +273,10 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "ReleaseDate",
@@ -286,7 +285,7 @@ namespace MovieDb.Infrastructure.Tests
 			});
 
 			// Assert
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
 			movies.ElementAt(0).Id.Should().Be(7);
 			movies.ElementAt(1).Id.Should().Be(8);
@@ -310,10 +309,10 @@ namespace MovieDb.Infrastructure.Tests
 			fakeDbContext.Movies.AddRange(TestData.Movies);
 			fakeDbContext.SaveChanges();
 
-			var sut = new MovieRepository(fakeDbContext);
+			var sut = new MovieSearchQuery(fakeDbContext);
 
 			// Act
-			SearchResults<Movie> results = await sut.Search(new MovieSearchModel()
+			SearchResults<MovieSearchResult> results = await sut.Search(new MovieSearchModel()
 			{
 				TitleContains = string.Empty,
 				SortBy = "ReleaseDate",
@@ -323,7 +322,7 @@ namespace MovieDb.Infrastructure.Tests
 			});
 
 			// Assert
-			IEnumerable<Movie> movies = results.Results;
+			IEnumerable<MovieSearchResult> movies = results.Results;
 			movies.Should().NotBeNull();
 			movies.ElementAt(11).Id.Should().Be(7);
 			movies.ElementAt(10).Id.Should().Be(8);

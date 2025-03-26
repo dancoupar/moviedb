@@ -5,13 +5,13 @@ using MovieDb.Domain.DataModels;
 using MovieDb.Infrastructure.DbContexts;
 using System.Linq.Expressions;
 
-namespace MovieDb.Infrastructure.Repositories
+namespace MovieDb.Infrastructure.Queries
 {
-	public class MovieRepository(MovieDbContext dbContext) : IMovieRepository
+	public class MovieSearchQuery(MovieDbContext dbContext) : IMovieSearchQuery
 	{
 		private readonly MovieDbContext _dbContext = dbContext;
 
-		public async Task<SearchResults<Movie>> Search(MovieSearchModel searchModel)
+		public async Task<SearchResults<MovieSearchResult>> Search(MovieSearchModel searchModel)
 		{
 			ArgumentNullException.ThrowIfNull(searchModel, nameof(searchModel));
 
@@ -36,15 +36,18 @@ namespace MovieDb.Infrastructure.Repositories
 			
 			query = ApplySort(query, searchModel.SortBy, searchModel.SortDescending);
 
-			return new SearchResults<Movie>()
+			IEnumerable<MovieSearchResult> results = await query
+				.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
+				.Take(searchModel.PageSize)
+				.Select(m => ConvertToSearchResult(m))
+				.ToListAsync();
+
+			return new SearchResults<MovieSearchResult>()
 			{
-				PageNumber = searchModel.PageNumber,
 				PageSize = searchModel.PageSize,
+				PageNumber = searchModel.PageNumber,
 				TotalRecords = totalRecords,
-				Results = await query
-					.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
-					.Take(searchModel.PageSize)
-					.ToListAsync()
+				Results = results
 			};
 		}
 
@@ -72,6 +75,17 @@ namespace MovieDb.Infrastructure.Repositories
 			};
 
 			return sortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
-		}	
+		}
+
+		private static MovieSearchResult ConvertToSearchResult(Movie entity)
+		{
+			return new MovieSearchResult()
+			{
+				Id = entity.Id,
+				Title = entity.Title,
+				ReleaseDate = entity.ReleaseDate,
+				Genre = string.Join(", ", entity.Genres.Select(g => g.Genre?.Name))
+			};
+		}
 	}
 }

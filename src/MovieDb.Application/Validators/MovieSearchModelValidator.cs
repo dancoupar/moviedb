@@ -8,9 +8,9 @@ namespace MovieDb.Application.Validators
 {
 	public class MovieSearchModelValidator : AbstractValidator<MovieSearchModel>
 	{
-		private readonly IMovieRepository _movieRepository;
+		private readonly IMovieSearchQuery _movieRepository;
 
-		public MovieSearchModelValidator([FromKeyedServices("Caching")] IMovieRepository movieRepository)
+		public MovieSearchModelValidator([FromKeyedServices("Caching")] IMovieSearchQuery movieRepository)
 		{
 			_movieRepository = movieRepository;
 
