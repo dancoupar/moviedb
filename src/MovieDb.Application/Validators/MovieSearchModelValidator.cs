@@ -2,17 +2,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using MovieDb.Application.Interfaces;
 using MovieDb.Application.Models;
-using MovieDb.Domain.DataModels;
 
 namespace MovieDb.Application.Validators
 {
 	public class MovieSearchModelValidator : AbstractValidator<MovieSearchModel>
 	{
-		private readonly IMovieSearchQuery _movieRepository;
+		private readonly IGenresQuery _genresQuery;
 
-		public MovieSearchModelValidator([FromKeyedServices("Caching")] IMovieSearchQuery movieRepository)
+		public MovieSearchModelValidator([FromKeyedServices("Caching")] IGenresQuery genresQuery)
 		{
-			_movieRepository = movieRepository;
+			_genresQuery = genresQuery;
 
 			this.RuleFor(m => m.TitleContains).MinimumLength(3).MaximumLength(100);
 			this.RuleFor(m => m.ActorContains).MinimumLength(3).MaximumLength(100);
@@ -33,9 +32,9 @@ namespace MovieDb.Application.Validators
 				return true;
 			}
 
-			IEnumerable<Genre> validGenres = await _movieRepository.GetDistinctGenres();
+			IEnumerable<string> validGenres = await _genresQuery.GetAllGenres();
 
-			if (genres.Except(validGenres.Select(g => g.Name)).Any())
+			if (genres.Except(validGenres).Any())
 			{
 				return false;
 			}

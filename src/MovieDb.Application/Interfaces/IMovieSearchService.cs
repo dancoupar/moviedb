@@ -7,6 +7,6 @@ namespace MovieDb.Application.Interfaces
 	{
 		Task<SearchResults<MovieSearchResult>> Search(MovieSearchModel searchModel);
 
-		Task<IEnumerable<string>> GetDistinctGenres();
+		Task<IEnumerable<string>> GetAllGenres();
 	}
 }

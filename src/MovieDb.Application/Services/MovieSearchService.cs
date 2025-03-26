@@ -3,13 +3,16 @@ using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
 using MovieDb.Application.Interfaces;
 using MovieDb.Application.Models;
-using MovieDb.Domain.DataModels;
 
 namespace MovieDb.Application.Services
 {
-	public class MovieSearchService([FromKeyedServices("Caching")] IMovieSearchQuery movieRepository, AbstractValidator<MovieSearchModel> validator) : IMovieSearchService
+	public class MovieSearchService(
+		[FromKeyedServices("Caching")] IMovieSearchQuery movieSearchQuery,
+		[FromKeyedServices("Caching")] IGenresQuery genresQuery,
+		AbstractValidator<MovieSearchModel> validator) : IMovieSearchService
 	{
-		private readonly IMovieSearchQuery _movieRepository = movieRepository;
+		private readonly IMovieSearchQuery _movieSearchQuery = movieSearchQuery;
+		private readonly IGenresQuery _genresQuery = genresQuery;
 		private readonly AbstractValidator<MovieSearchModel> _validator = validator;
 
 		public async Task<SearchResults<MovieSearchResult>> Search(MovieSearchModel searchModel)
@@ -21,13 +24,12 @@ namespace MovieDb.Application.Services
 				throw new ValidationException(validationResult.Errors);
 			}
 
-			return await _movieRepository.Search(searchModel);
+			return await _movieSearchQuery.Search(searchModel);
 		}
 
-		public async Task<IEnumerable<string>> GetDistinctGenres()
+		public async Task<IEnumerable<string>> GetAllGenres()
 		{
-			IEnumerable<Genre> genres = await _movieRepository.GetDistinctGenres();
-			return genres.Select(g => g.Name).ToList();
-		}		
+			return await _genresQuery.GetAllGenres();
+		}
 	}
 }

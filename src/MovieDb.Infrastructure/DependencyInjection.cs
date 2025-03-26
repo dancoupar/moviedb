@@ -16,6 +16,9 @@ namespace MovieDb.Infrastructure
 			services.AddScoped<IMovieSearchQuery, MovieSearchQuery>();
 			services.AddKeyedScoped<IMovieSearchQuery, CachingMovieSearchQuery>("Caching");
 
+			services.AddScoped<IGenresQuery, GenresQuery>();
+			services.AddKeyedScoped<IGenresQuery, CachingGenresQuery>("Caching");
+
 			return services;
 		}
 	}

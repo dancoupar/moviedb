@@ -57,7 +57,7 @@ namespace MovieDb.Api.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<ActionResult<IEnumerable<string>>> GetAllGenres()
 		{
-			return this.Ok(await this.GetDistinctGenres());
+			return this.Ok(await _movieSearchService.GetAllGenres());
 		}
 
 		[Route("/error")]
@@ -83,11 +83,6 @@ namespace MovieDb.Api.Controllers
 			}
 
 			return this.Problem();
-		}
-
-		private async Task<IEnumerable<string>> GetDistinctGenres()
-		{			
-			return await _movieSearchService.GetDistinctGenres();
 		}
 	}
 }
