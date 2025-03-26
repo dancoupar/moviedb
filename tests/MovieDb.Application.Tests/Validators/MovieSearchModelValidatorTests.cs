@@ -73,11 +73,11 @@ namespace MovieDb.Application.Tests.Validators
 		}
 
 		[Theory]
-		[InlineData(0, false)]
-		[InlineData(1, true)]
+		[InlineData(9, false)]
+		[InlineData(10, true)]
 		[InlineData(100, true)]
 		[InlineData(101, false)]
-		public async Task Page_size_must_be_between_1_and_100(int pageSize, bool expectedResult)
+		public async Task Page_size_must_be_between_10_and_100(int pageSize, bool expectedResult)
 		{
 			// Arrange
 			var sut = new MovieSearchModelValidator(new Mock<IGenresQuery>().Object);
@@ -97,9 +97,9 @@ namespace MovieDb.Application.Tests.Validators
 		[Theory]
 		[InlineData(0, false)]
 		[InlineData(1, true)]
-		[InlineData(100, true)]
-		[InlineData(101, false)]
-		public async Task Page_number_must_be_between_1_and_100(int pageNumber, bool expectedResult)
+		[InlineData(1000, true)]
+		[InlineData(1001, false)]
+		public async Task Page_number_must_be_between_1_and_1000(int pageNumber, bool expectedResult)
 		{
 			// Arrange
 			var sut = new MovieSearchModelValidator(new Mock<IGenresQuery>().Object);

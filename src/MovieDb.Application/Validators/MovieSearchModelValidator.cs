@@ -16,8 +16,8 @@ namespace MovieDb.Application.Validators
 			this.RuleFor(m => m.TitleContains).NotEmpty();
 			this.RuleFor(m => m.TitleContains).MinimumLength(3).MaximumLength(100);
 			this.RuleFor(m => m.ActorContains).MinimumLength(3).MaximumLength(100);
-			this.RuleFor(m => m.PageSize).InclusiveBetween(1, 100);
-			this.RuleFor(m => m.PageNumber).InclusiveBetween(1, 100);
+			this.RuleFor(m => m.PageSize).InclusiveBetween(10, 100);
+			this.RuleFor(m => m.PageNumber).InclusiveBetween(1, 1000);
 			
 			string[] validSortBys = ["Title", "ReleaseDate"];
 			this.RuleFor(m => m.SortBy).Must(s => s is null || validSortBys.Contains(s)).WithMessage("Invalid sort expression.");

@@ -28,7 +28,7 @@ namespace MovieDb.Api.Models
 		/// The size of each page in the results returned. Can be between 1 and 100.
 		/// </summary>
 		[Required]
-		[Range(1, 100)]
+		[Range(10, 100)]
 		[DisplayName("Page size")]
 		public int PageSize { get; set; }
 
@@ -36,7 +36,7 @@ namespace MovieDb.Api.Models
 		/// If the number of search results exceeds the page size, the current page number to view.
 		/// </summary>
 		[Required]
-		[Range(1, 100)]
+		[Range(1, 1000)]
 		public int PageNumber { get; set; }
 		
 		/// <summary>
