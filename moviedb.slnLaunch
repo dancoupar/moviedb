@@ -3,12 +3,12 @@
     "Name": "DefaultProfile",
     "Projects": [
       {
-        "Path": "MovieDb.Api\\MovieDb.Api.csproj",
+        "Path": "src\\MovieDb.UI\\MovieDb.UI.csproj",
         "Action": "Start",
         "DebugTarget": "http"
       },
       {
-        "Path": "src\\MovieDb.UI\\MovieDb.UI.csproj",
+        "Path": "src\\MovieDb.Api\\MovieDb.Api.csproj",
         "Action": "Start",
         "DebugTarget": "http"
       }

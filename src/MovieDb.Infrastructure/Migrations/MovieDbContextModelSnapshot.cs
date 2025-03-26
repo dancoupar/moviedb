@@ -17,6 +17,22 @@ namespace MovieDb.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
+            modelBuilder.Entity("MovieDb.Domain.DataModels.Actor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .UseCollation("NOCASE");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Actors");
+                });
+
             modelBuilder.Entity("MovieDb.Domain.DataModels.Genre", b =>
                 {
                     b.Property<int>("Id")
@@ -80,15 +96,15 @@ namespace MovieDb.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ActorName")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .UseCollation("NOCASE");
+                    b.Property<int?>("ActorId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("MovieId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ActorId");
 
                     b.HasIndex("MovieId");
 
@@ -118,11 +134,17 @@ namespace MovieDb.Infrastructure.Migrations
 
             modelBuilder.Entity("MovieDb.Domain.DataModels.MovieActor", b =>
                 {
+                    b.HasOne("MovieDb.Domain.DataModels.Actor", "Actor")
+                        .WithMany("MovieActors")
+                        .HasForeignKey("ActorId");
+
                     b.HasOne("MovieDb.Domain.DataModels.Movie", "Movie")
                         .WithMany("Actors")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Actor");
 
                     b.Navigation("Movie");
                 });
@@ -144,6 +166,11 @@ namespace MovieDb.Infrastructure.Migrations
                     b.Navigation("Genre");
 
                     b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("MovieDb.Domain.DataModels.Actor", b =>
+                {
+                    b.Navigation("MovieActors");
                 });
 
             modelBuilder.Entity("MovieDb.Domain.DataModels.Genre", b =>

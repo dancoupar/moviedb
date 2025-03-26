@@ -28,7 +28,8 @@ namespace MovieDb.Infrastructure.Queries
 			{
 				query = query
 					.Include(m => m.Actors)
-					.Where(m => m.Actors.Any(a => EF.Functions.Like(a.ActorName, $"%{searchModel.ActorContains}%")));
+					.ThenInclude(m => m.Actor)
+					.Where(m => m.Actors.Any(a => EF.Functions.Like(a.Actor == null ? null : a.Actor.Name, $"%{searchModel.ActorContains}%")));
 			}
 
 			if (searchModel.Genres?.Length > 0)

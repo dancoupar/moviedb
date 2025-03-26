@@ -6,8 +6,8 @@
 
 		public int MovieId { get; set; }
 
-		public required string ActorName { get; set; }
-
 		public Movie? Movie { get; set; }
+
+		public Actor? Actor { get; set; }
 	}
 }

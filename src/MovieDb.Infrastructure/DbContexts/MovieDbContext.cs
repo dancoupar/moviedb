@@ -15,6 +15,8 @@ namespace MovieDb.Infrastructure.DbContexts
 
 		public DbSet<Genre> Genres { get; set; }
 
+		public DbSet<Actor> Actors { get; set; }
+
 		protected override void OnConfiguring(DbContextOptionsBuilder options)
 		{
 			if (options.IsConfigured)
@@ -48,8 +50,8 @@ namespace MovieDb.Infrastructure.DbContexts
 				.Property(m => m.Title)
 				.UseCollation("NOCASE");
 
-			modelBuilder.Entity<MovieActor>()
-				.Property(a => a.ActorName)
+			modelBuilder.Entity<Actor>()
+				.Property(a => a.Name)
 				.UseCollation("NOCASE");
 
 			modelBuilder.Entity<Movie>()

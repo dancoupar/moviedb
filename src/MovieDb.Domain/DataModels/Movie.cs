@@ -22,6 +22,6 @@
 
 		public List<MovieGenre> Genres { get; set; } = [];
 
-		public required ICollection<MovieActor> Actors { get; set; }
+		public List<MovieActor> Actors { get; set; } = [];
 	}
 }

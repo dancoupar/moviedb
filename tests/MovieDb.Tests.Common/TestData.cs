@@ -17,7 +17,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg"),
 				Genres = [new() { Genre = new() { Name = "Crime" } }, new() { Genre = new() { Name = "Mystery" } }, new() { Genre = new() { Name = "Thriller" } }],
-				Actors = [new() { ActorName = "Robert Pattinson" }, new() { ActorName = "Zoë Kravitz" }]
+				Actors = [new() { Actor = new() { Name = "Robert Pattinson" } }, new() { Actor = new() { Name = "Zoë Kravitz" } }]
 			},
 			new Movie()
 			{
@@ -31,7 +31,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/jUhGHv4YihieVjhU2TmFaBsZ4Xg.jpg"),
 				Genres = [new() { Genre = new() { Name = "Fantasy" } }, new() { Genre = new() { Name = "Action" } }],
-				Actors = [new() { ActorName = "Michael Keaton" }, new() { ActorName = "Jack Nicholson" }]
+				Actors = [new() { Actor = new() { Name = "Michael Keaton" } }, new() { Actor = new() { Name = "Jack Nicholson" } }]
 			},
 			new Movie()
 			{
@@ -45,7 +45,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/8RW2runSEc34IwKN2D1aPcJd2UL.jpg"),
 				Genres = [new() { Genre = new() { Name = "Action" } }, new() { Genre = new() { Name = "Crime" } }, new() { Genre = new() { Name = "Drama" } }],
-				Actors = [new() { ActorName = "Christian Bale" }, new() { ActorName = "Katie Holmes" }, new() { ActorName = "Liam Neeson" }]
+				Actors = [new() { Actor = new() { Name = "Christian Bale" } }, new() { Actor = new() { Name = "Katie Holmes" } }, new() { Actor = new() { Name = "Liam Neeson" } }]
 			},
 			new Movie()
 			{
@@ -59,7 +59,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/5UsK3grJvtQrtzEgqNlDljJW96w.jpg"),
 				Genres = [new() { Genre = new() { Name = "Action" } }, new() { Genre = new() { Name = "Adventure" } }, new() { Genre = new() { Name = "Fantasy" } }],
-				Actors = [new() { ActorName = "Ben Affleck" }, new() { ActorName = "Henry Cavill" }, new() { ActorName = "Amy Adams" }]
+				Actors = [new() { Actor = new() { Name = "Ben Affleck" } }, new() {	Actor = new() { Name = "Henry Cavill" } }, new() { Actor = new() { Name = "Amy Adams" } }]
 			},
 			new Movie()
 			{
@@ -73,7 +73,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/mnihMYFydSUDm5LMnavkaaZqYKp.jpg"),
 				Genres = [new() { Genre = new() { Name = "Action" } }, new() { Genre = new() { Name = "Fantasy" } }],
-				Actors = [new() { ActorName = "Michael Keaton" }, new() { ActorName = "Danny DeVito" }]
+				Actors = [new() { Actor = new() { Name = "Michael Keaton" } }, new() { Actor = new() { Name = "Danny DeVito" } }]
 			},
 			new Movie()
 			{
@@ -87,7 +87,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/pc6Y42r8AGAT8iv7V24AkYdcbb8.jpg"),
 				Genres = [new() { Genre = new() { Name = "Science Fiction" } }, new() { Genre = new() { Name = "Action" } }, new() { Genre = new() { Name = "Fantasy" } }],
-				Actors = [new() { ActorName = "George Cloone" }, new() { ActorName = "Chris O'Donnel" },  new() { ActorName = "Alicia Silverstone" }]
+				Actors = [new() { Actor = new() { Name = "George Cloone" } }, new() { Actor = new() { Name = "Chris O'Donnel" } },  new() { Actor = new() { Name = "Alicia Silverstone" }				 }]
 			},
 			new Movie()
 			{
@@ -101,7 +101,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/eEslKSwcqmiNS6va24Pbxf2UKmJ.jpg"),
 				Genres = [new() { Genre = new() { Name = "Drama" } }, new() { Genre = new() { Name = "Crime" } }],
-				Actors = [new() { ActorName = "Marlon Brando" }, new() { ActorName = "Al Pacino" }]
+				Actors = [new() { Actor = new() { Name = "Marlon Brando" } }, new() { Actor = new() { Name = "Al Pacino" } }]
 			},
 			new Movie()
 			{
@@ -115,7 +115,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg"),
 				Genres = [new() { Genre = new() { Name = "Drama" } }, new() { Genre = new() { Name = "Crime" } }],
-				Actors = [new() { ActorName = "Al Pacino" }, new() { ActorName = "Robert De Niro" }]
+				Actors = [new() { Actor = new() { Name = "Al Pacino" } }, new() { Actor = new() { Name = "Robert De Niro" } }]
 			},
 			new Movie()
 			{
@@ -129,7 +129,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/lm3pQ2QoQ16pextRsmnUbG2onES.jpg"),
 				Genres = [new() { Genre = new() { Name = "Crime" } }, new() { Genre = new() { Name = "Drama" } }, new() { Genre = new() { Name = "Thriller" } }],
-				Actors = [new() { ActorName = "Al Pacino" }, new() { ActorName = "Sofia Coppola" }, new() { ActorName = "Andy Garcia" }]
+				Actors = [new() {	Actor = new() { Name = "Al Pacino" }	 }, new() { Actor = new() { Name = "Sofia Coppola" } }, new() { Actor = new() { Name = "Andy Garcia" } }]
 			},
 			new Movie()
 			{
@@ -143,7 +143,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/aq4Pwv5Xeuvj6HZKtxyd23e6bE9.jpg"),
 				Genres = [new() { Genre = new() { Name = "Action" } }, new() { Genre = new() { Name = "Adventure" } }, new() { Genre = new() { Name = "Thriller" } }, new() { Genre = new() { Name = "War" } }],
-				Actors = [new() { ActorName = "Ralph Fiennes" }, new() { ActorName = "Gemma Arterton" }, new() { ActorName = "Rhys Ifans" }]
+				Actors = [new() { Actor = new() { Name = "Ralph Fiennes" } }, new() { Actor = new() { Name = "Gemma Arterton" } }, new() { Actor = new() { Name = "Rhys Ifans" } }]
 			},
 			new Movie()
 			{
@@ -157,7 +157,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/wfGfxtBkhBzQfOZw4S8IQZgrH0a.jpg"),
 				Genres = [new() { Genre = new() { Name = "Adventure" } }, new() { Genre = new() { Name = "Comedy" } }, new() { Genre = new() { Name = "Family" } }, new() { Genre = new() { Name = "Fantasy" } }],
-				Actors = [new() { ActorName = "Johnny Depp" }, new() { ActorName = "Freddie Highmore" }]
+				Actors = [new() { Actor = new() { Name = "Johnny Depp" } }, new() { Actor = new() { Name = "Freddie Highmore" } }]
 			},
 			new Movie()
 			{
@@ -171,7 +171,7 @@ namespace MovieDb.Tests.Common
 				OriginalLanguage = "en",
 				PosterUrl = new Uri("https://image.tmdb.org/t/p/original/oU7Oq2kFAAlGqbU4VoAE36g4hoI.jpg"),
 				Genres = [new() { Genre = new() { Name = "Adventure" } }, new() { Genre = new() { Name = "Science Fiction" } }],
-				Actors = [new() { ActorName = "Sam Neill" }, new() { ActorName = "Laura Dern" }, new() { ActorName = "Jeff Goldblum" }]
+				Actors = [new() { Actor = new() { Name = "Sam Neill" } }, new() { Actor = new() { Name = "Laura Dern" } }, new() { Actor = new() { Name = "Jeff Goldblum" } }]
 			}
 		];
 	}
