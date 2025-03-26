@@ -39,7 +39,13 @@ namespace MovieDb.Infrastructure.Queries
 			IEnumerable<MovieSearchResult> results = await query
 				.Skip((searchModel.PageNumber - 1) * searchModel.PageSize)
 				.Take(searchModel.PageSize)
-				.Select(m => ConvertToSearchResult(m))
+				.Select(m => new MovieSearchResult()
+				{
+					Id = m.Id,
+					Title = m.Title,
+					ReleaseDate = m.ReleaseDate,
+					Genre = string.Join(", ", m.Genres.Select(g => g.Genre != null ? g.Genre.Name : string.Empty))
+				})
 				.ToListAsync();
 
 			return new SearchResults<MovieSearchResult>()
@@ -75,17 +81,6 @@ namespace MovieDb.Infrastructure.Queries
 			};
 
 			return sortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
-		}
-
-		private static MovieSearchResult ConvertToSearchResult(Movie entity)
-		{
-			return new MovieSearchResult()
-			{
-				Id = entity.Id,
-				Title = entity.Title,
-				ReleaseDate = entity.ReleaseDate,
-				Genre = string.Join(", ", entity.Genres.Select(g => g.Genre?.Name))
-			};
 		}
 	}
 }
