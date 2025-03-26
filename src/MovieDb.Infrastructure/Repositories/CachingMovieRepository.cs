@@ -22,7 +22,7 @@ namespace MovieDb.Infrastructure.Repositories
 			return searchResults is null ? throw new ApplicationException() : searchResults;
 		}
 
-		public async Task<IEnumerable<string>> GetDistinctGenres()
+		public async Task<IEnumerable<Genre>> GetDistinctGenres()
 		{
 			return await _cache.GetOrCreateAsync("genres", entry =>
 			{

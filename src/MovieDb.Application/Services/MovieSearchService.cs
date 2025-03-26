@@ -34,8 +34,8 @@ namespace MovieDb.Application.Services
 
 		public async Task<IEnumerable<string>> GetDistinctGenres()
 		{
-			IEnumerable<string> genres = await _movieRepository.GetDistinctGenres();
-			return genres;
+			IEnumerable<Genre> genres = await _movieRepository.GetDistinctGenres();
+			return genres.Select(g => g.Name).ToList();
 		}
 
 		private static MovieSearchResult ConvertToSearchResult(Movie entity)
@@ -50,7 +50,7 @@ namespace MovieDb.Application.Services
 				VoteCount = entity.VoteCount,
 				VoteAverage = entity.VoteAverage,
 				OriginalLanguage = entity.OriginalLanguage,
-				Genre = string.Join(", ", entity.Genres.Select(g => g.Genre)),
+				Genre = string.Join(", ", entity.Genres.Select(g => g.Genre?.Name)),
 				PosterUrl = entity.PosterUrl
 			};
 		}

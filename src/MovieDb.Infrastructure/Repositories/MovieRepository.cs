@@ -17,6 +17,7 @@ namespace MovieDb.Infrastructure.Repositories
 
 			IQueryable<Movie> query = _dbContext.Movies
 				.Include(m => m.Genres)
+				.ThenInclude(m => m.Genre)
 				.Where(m => EF.Functions.Like(m.Title, $"%{searchModel.TitleContains}%"));
 
 			if (!string.IsNullOrEmpty(searchModel.ActorContains))
@@ -28,7 +29,7 @@ namespace MovieDb.Infrastructure.Repositories
 
 			if (searchModel.Genres?.Length > 0)
 			{
-				query = query.Where(m => m.Genres.Select(g => g.GenreName).Intersect(searchModel.Genres).Any());
+				query = query.Where(m => m.Genres.Select(g => g.Genre == null ? null : g.Genre.Name).Intersect(searchModel.Genres).Any());
 			}
 
 			var totalRecords = await query.CountAsync();
@@ -47,12 +48,10 @@ namespace MovieDb.Infrastructure.Repositories
 			};
 		}
 
-		public async Task<IEnumerable<string>> GetDistinctGenres()
+		public async Task<IEnumerable<Genre>> GetDistinctGenres()
 		{
-			return await _dbContext.MovieGenre
-				.Select(g => g.GenreName)
-				.Distinct()
-				.Order()
+			return await _dbContext.Genres
+				.OrderBy(g => g.Name)
 				.AsSingleQuery()
 				.ToListAsync();
 		}

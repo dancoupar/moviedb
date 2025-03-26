@@ -189,7 +189,7 @@ namespace MovieDb.Infrastructure.Tests
 			// Assert
 			IEnumerable<Movie> movies = results.Results;
 			movies.Should().NotBeNull();
-			movies.Should().AllSatisfy(m => m.Genres.Select(g => g.GenreName).Intersect(genres).Should().NotBeEmpty());
+			movies.Should().AllSatisfy(m => m.Genres.Select(g => g.Genre?.Name).Intersect(genres).Should().NotBeEmpty());
 			movies.Count().Should().Be(expectedNumberOfResults);
 		}
 

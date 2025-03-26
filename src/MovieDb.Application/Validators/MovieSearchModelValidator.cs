@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MovieDb.Application.Interfaces;
 using MovieDb.Application.Models;
+using MovieDb.Domain.DataModels;
 
 namespace MovieDb.Application.Validators
 {
@@ -32,9 +33,9 @@ namespace MovieDb.Application.Validators
 				return true;
 			}
 
-			IEnumerable<string> validGenres = await _movieRepository.GetDistinctGenres();
+			IEnumerable<Genre> validGenres = await _movieRepository.GetDistinctGenres();
 
-			if (genres.Except(validGenres).Any())
+			if (genres.Except(validGenres.Select(g => g.Name)).Any())
 			{
 				return false;
 			}
