@@ -57,14 +57,6 @@ namespace MovieDb.Infrastructure.Queries
 			};
 		}
 
-		public async Task<IEnumerable<Genre>> GetDistinctGenres()
-		{
-			return await _dbContext.Genres
-				.OrderBy(g => g.Name)
-				.AsSingleQuery()
-				.ToListAsync();
-		}
-
 		private static IQueryable<Movie> ApplySort(IQueryable<Movie> query, string? sortBy, bool sortDescending)
 		{
 			if (sortBy is null)

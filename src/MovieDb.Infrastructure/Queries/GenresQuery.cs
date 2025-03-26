@@ -11,7 +11,6 @@ namespace MovieDb.Infrastructure.Queries
 		public async Task<IEnumerable<string>> GetAllGenres()
 		{
 			return await _dbContext.Genres
-				.AsSingleQuery()
 				.Select(g => g.Name)
 				.Order()
 				.ToListAsync();
