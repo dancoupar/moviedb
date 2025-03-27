@@ -9,12 +9,10 @@ EXPOSE 8080
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["MovieDb.Api.csproj", "MovieDb.Api/"]
-RUN dotnet restore "./MovieDb.Api/MovieDb.Api.csproj"
-WORKDIR "/src/MovieDb.Api"
 COPY . .
-RUN dotnet build "./MovieDb.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR /src/MovieDb.Api
+RUN dotnet restore "MovieDb.Api.csproj"
+RUN dotnet build -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
@@ -24,7 +22,9 @@ RUN dotnet publish "./MovieDb.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publis
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
+USER root
+RUN mkdir -p /data && chmod -R 777 /data
+COPY --chmod=777 /data/movies.db /data/
+USER app
 COPY --from=publish /app/publish .
-RUN mkdir -p data && chmod -R 777 data
-COPY --chmod=777 /Data/movies.db data/
 ENTRYPOINT ["dotnet", "MovieDb.Api.dll"]

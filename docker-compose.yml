@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   webapi:
     build:
-      context: ./MovieDb.Api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/MovieDb.Api/Dockerfile
     container_name: webapi
     ports:
       - "5001:8080"
@@ -13,8 +11,8 @@ services:
 
   mvc:
     build:
-      context: ./MovieDb.UI
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/MovieDb.UI/Dockerfile
     container_name: mvc
     ports:
       - "5002:8080"
