@@ -2,8 +2,8 @@
 using FluentValidation.Results;
 using Moq;
 using MovieDb.Application.Interfaces;
-using MovieDb.Application.Models;
 using MovieDb.Application.Validators;
+using MovieDb.Domain.Models;
 
 namespace MovieDb.Application.Tests.Validators
 {

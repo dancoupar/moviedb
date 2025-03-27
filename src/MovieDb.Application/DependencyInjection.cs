@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using MovieDb.Application.Interfaces;
-using MovieDb.Application.Models;
 using MovieDb.Application.Services;
 using MovieDb.Application.Validators;
+using MovieDb.Domain.Models;
 
 namespace MovieDb.Application
 {

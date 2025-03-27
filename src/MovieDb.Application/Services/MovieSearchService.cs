@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
 using MovieDb.Application.Interfaces;
-using MovieDb.Application.Models;
+using MovieDb.Domain.Models;
 
 namespace MovieDb.Application.Services
 {

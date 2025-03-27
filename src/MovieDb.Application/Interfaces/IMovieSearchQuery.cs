@@ -1,4 +1,4 @@
-﻿using MovieDb.Application.Models;
+﻿using MovieDb.Domain.Models;
 
 namespace MovieDb.Application.Interfaces
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using MovieDb.Application.Interfaces;
-using MovieDb.Application.Models;
+using MovieDb.Domain.Models;
 using System.Text.Json;
 
 namespace MovieDb.Infrastructure.Queries

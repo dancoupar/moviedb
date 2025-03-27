@@ -3,8 +3,8 @@ using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using MovieDb.Application.Interfaces;
-using MovieDb.Application.Models;
 using MovieDb.Application.Services;
+using MovieDb.Domain.Models;
 
 namespace MovieDb.Application.Tests.Services
 {
@@ -62,6 +62,31 @@ namespace MovieDb.Application.Tests.Services
 
 			// Assert
 			results.Results.Should().BeEquivalentTo(searchResults);
+		}
+
+		[Fact]
+		public async Task An_exception_is_thrown_if_the_search_model_is_invalid()
+		{
+			// Arrange
+			var invalidSearchModel = new MovieSearchModel()
+			{
+				TitleContains = "x",
+				PageNumber = 1,
+				PageSize = 10
+			};
+
+			var mockValidator = new Mock<IValidator<MovieSearchModel>>();
+			mockValidator.Setup(m => m.ValidateAsync(invalidSearchModel, It.IsAny<CancellationToken>())).ReturnsAsync(
+				new ValidationResult() { Errors = [new ValidationFailure()] }
+			);
+
+			var sut = new MovieSearchService(new Mock<IMovieSearchQuery>().Object, new Mock<IGenresQuery>().Object, mockValidator.Object);
+
+			// Act
+			Func<Task> act = async () => await sut.Search(invalidSearchModel);
+
+			// Assert
+			await act.Should().ThrowAsync<ValidationException>();
 		}
 
 		[Fact]

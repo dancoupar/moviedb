@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieDb.Application.Interfaces;
-using MovieDb.Application.Models;
 using MovieDb.Domain.DataModels;
+using MovieDb.Domain.Models;
 using MovieDb.Infrastructure.DbContexts;
 using System.Linq.Expressions;
 
